@@ -7,5 +7,8 @@ export const environment = {
     storageBucket: "reviewsnewfirebase-d8586.firebasestorage.app",
     messagingSenderId: "429359893911",
     appId: "1:429359893911:web:ba7ad7ffb14e896a0e48d2"
-  }
+  },
+  correosAutorizados: [
+    'sergiogallardo2697@gmail.com'
+  ] as string[]
 };
