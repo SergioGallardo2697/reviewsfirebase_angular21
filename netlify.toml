@@ -1,0 +1,37 @@
+[build]
+  command   = "npm run build"
+  publish   = "dist/reviewsfirebase/browser"
+
+[build.environment]
+  ANGULAR_DEPLOY_URL = ""
+
+# Redirige todas las rutas al index.html para que Angular Router funcione en producción
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# --- Headers globales de seguridad y sin caché ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Sin caché: el navegador siempre solicita la versión más reciente
+    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+
+# Los hashed chunks de Angular (main.abc123.js) pueden cachearse de forma segura
+# porque el nombre cambia con cada build cuando el contenido cambia
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# El index.html nunca se cachea para que siempre cargue los chunks actualizados
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
