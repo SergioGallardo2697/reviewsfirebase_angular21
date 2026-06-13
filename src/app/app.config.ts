@@ -31,6 +31,13 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideAnimationsAsync(),
-    providePrimeNG({ theme: { preset: PresetPersonalizado } })
+    providePrimeNG({
+      theme: {
+        preset: PresetPersonalizado,
+        options: {
+          darkModeSelector: 'none'
+        }
+      }
+    })
   ]
 };
