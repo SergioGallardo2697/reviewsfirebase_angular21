@@ -1,49 +1,70 @@
-<mat-sidenav-container class="contenedor-app">
-  <mat-sidenav [mode]="esMobile() ? 'over' : 'side'" [opened]="menuAbierto()" (closed)="menuAbierto.set(false)" class="sidenav">
-    <div class="logo-menu">
+<div class="contenedor-app">
+  <header class="barra-superior">
+    <!-- Logo de la marca -->
+    <a class="logo-menu" routerLink="/vendedores">
       <mat-icon class="logo-icono">rate_review</mat-icon>
       <span class="logo-texto">Reviews</span>
-    </div>
+    </a>
 
-    <mat-nav-list>
+    <!-- Navegación horizontal (escritorio) -->
+    <nav class="nav-horizontal">
       @for (item of menuItems; track item.ruta) {
-        <a mat-list-item (click)="navegarY(item.ruta)" routerLinkActive="activo" [routerLink]="item.ruta">
-          <mat-icon matListItemIcon>{{ item.icono }}</mat-icon>
-          <span matListItemTitle>{{ item.etiqueta }}</span>
+        <a class="nav-link" routerLinkActive="activo" [routerLink]="item.ruta">
+          <mat-icon>{{ item.icono }}</mat-icon>
+          <span>{{ item.etiqueta }}</span>
         </a>
       }
-    </mat-nav-list>
+    </nav>
 
-    <div class="spacer"></div>
-
+    <!-- Menú de usuario desplegable estilo MercadoLibre -->
     @if (autenticacionService.usuarioActual(); as usuario) {
-      <div class="tarjeta-usuario">
-        <div class="info-usuario">
+      <button class="disparador-usuario" [matMenuTriggerFor]="menuUsuario">
+        @if (usuario.photoURL) {
+          <img [src]="usuario.photoURL" [alt]="usuario.displayName || 'Usuario'" class="avatar" referrerpolicy="no-referrer" />
+        } @else {
+          <div class="avatar avatar-iniciales">{{ obtenerIniciales(usuario.displayName || usuario.email || '?') }}</div>
+        }
+        <span class="nombre-disparador">{{ usuario.displayName || 'Usuario' }}</span>
+        <mat-icon class="flecha-disparador">expand_more</mat-icon>
+      </button>
+
+      <mat-menu #menuUsuario="matMenu" class="panel-usuario" xPosition="before">
+        <!-- Cabecera con datos del usuario -->
+        <div class="cabecera-usuario" (click)="$event.stopPropagation()">
           @if (usuario.photoURL) {
-            <img [src]="usuario.photoURL" [alt]="usuario.displayName || 'Usuario'" class="avatar" referrerpolicy="no-referrer" />
+            <img [src]="usuario.photoURL" [alt]="usuario.displayName || 'Usuario'" class="avatar avatar-grande" referrerpolicy="no-referrer" />
           } @else {
-            <div class="avatar avatar-iniciales">{{ obtenerIniciales(usuario.displayName || usuario.email || '?') }}</div>
+            <div class="avatar avatar-grande avatar-iniciales">{{ obtenerIniciales(usuario.displayName || usuario.email || '?') }}</div>
           }
           <div class="datos-usuario">
             <span class="nombre-usuario">{{ usuario.displayName || 'Usuario' }}</span>
             <span class="correo-usuario">{{ usuario.email }}</span>
           </div>
         </div>
-        <button mat-icon-button class="boton-cerrar-sesion" (click)="cerrarSesion()" matTooltip="Cerrar sesión" aria-label="Cerrar sesión">
-          <mat-icon>logout</mat-icon>
-        </button>
-      </div>
-    }
-  </mat-sidenav>
 
-  <mat-sidenav-content class="contenido-principal">
-    <mat-toolbar class="toolbar-superior">
-      <button mat-icon-button (click)="toggleMenu()">
-        <mat-icon>menu</mat-icon>
-      </button>
-    </mat-toolbar>
-    <div class="contenido-pagina">
-      <router-outlet />
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+        <div class="separador-menu"></div>
+
+        <!-- Opciones de navegación (visibles en móvil) -->
+        <div class="opciones-moviles">
+          @for (item of menuItems; track item.ruta) {
+            <button mat-menu-item [routerLink]="item.ruta" routerLinkActive="activo">
+              <mat-icon>{{ item.icono }}</mat-icon>
+              <span>{{ item.etiqueta }}</span>
+            </button>
+          }
+          <div class="separador-menu"></div>
+        </div>
+
+        <!-- Cerrar sesión -->
+        <button mat-menu-item class="item-salir" (click)="cerrarSesion()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+    }
+  </header>
+
+  <main class="contenido-pagina">
+    <router-outlet />
+  </main>
+</div>

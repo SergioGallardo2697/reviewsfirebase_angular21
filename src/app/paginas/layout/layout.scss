@@ -1,21 +1,30 @@
 .contenedor-app {
   height: 100vh;
-}
-
-.sidenav {
-  width: 240px;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, var(--mat-sys-surface-container) 0%, var(--mat-sys-surface-container-low) 100%);
-  border-right: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface);
+}
+
+.barra-superior {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: 64px;
+  padding: 0 1.5rem;
+  background: var(--mat-sys-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
 }
 
 .logo-menu {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.25rem 1rem;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  gap: 0.5rem;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
 .logo-icono {
@@ -35,37 +44,83 @@
   letter-spacing: -0.02em;
 }
 
-.spacer {
+// Navegación horizontal
+.nav-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   flex: 1;
 }
 
-.tarjeta-usuario {
+.nav-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0.75rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: 12px;
-  background: var(--mat-sys-surface-container-high);
-  border: 1px solid var(--mat-sys-outline-variant);
-  transition: background 0.2s ease;
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 
   &:hover {
-    background: var(--mat-sys-surface-container-highest);
+    background: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
+  }
+
+  &.activo {
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    font-weight: 600;
   }
 }
 
-.info-usuario {
+// Disparador del menú de usuario
+.disparador-usuario {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  flex: 1;
-  min-width: 0;
+  gap: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 24px;
+  background: var(--mat-sys-surface);
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+  }
+}
+
+.nombre-disparador {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flecha-disparador {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   flex-shrink: 0;
   object-fit: cover;
@@ -75,6 +130,12 @@
   justify-content: center;
 }
 
+.avatar-grande {
+  width: 48px;
+  height: 48px;
+  font-size: 1.1rem;
+}
+
 .avatar-iniciales {
   font-size: 0.8rem;
   font-weight: 600;
@@ -82,70 +143,52 @@
   color: #fff;
 }
 
+// Panel desplegable de usuario
+.cabecera-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  cursor: default;
+}
+
 .datos-usuario {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  flex: 1;
 }
 
 .nombre-usuario {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--mat-sys-on-surface);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .correo-usuario {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--mat-sys-on-surface-variant);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
-.boton-cerrar-sesion {
-  flex-shrink: 0;
-  color: var(--mat-sys-on-surface-variant);
+.separador-menu {
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  margin: 0.25rem 0;
+}
 
-  &:hover {
+.item-salir {
+  color: var(--mat-sys-error);
+
+  mat-icon {
     color: var(--mat-sys-error);
   }
-}
-
-.activo {
-  background: var(--mat-sys-primary-container) !important;
-  color: var(--mat-sys-on-primary-container) !important;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.contenido-principal {
-  background: var(--mat-sys-surface);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.toolbar-superior {
-  background: var(--mat-sys-surface);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  height: 56px;
-  min-height: 56px;
-  backdrop-filter: blur(10px);
-}
-
-.toolbar-titulo {
-  margin-left: 0.5rem;
-  font-weight: 600;
-  font-size: 1rem;
 }
 
 .contenido-pagina {
@@ -154,7 +197,30 @@
   overflow: auto;
 }
 
+// Las opciones de navegación del menú solo se muestran en móvil
+.opciones-moviles {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .barra-superior {
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+
+  // Ocultamos la nav horizontal: las opciones pasan al menú desplegable
+  .nav-horizontal {
+    display: none;
+  }
+
+  .nombre-disparador {
+    display: none;
+  }
+
+  .opciones-moviles {
+    display: block;
+  }
+
   .contenido-pagina {
     padding: 0.75rem;
   }
