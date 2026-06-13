@@ -1,0 +1,95 @@
+<p-toast />
+<p-confirmDialog />
+
+<div class="cabecera">
+  <h2>Paypals</h2>
+  <div class="acciones-cabecera">
+    <p-iconfield class="campo-busqueda">
+      <p-inputicon styleClass="pi pi-search" />
+      <input pInputText [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar paypal..." />
+    </p-iconfield>
+    <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar(tabla)" />
+    <p-button icon="pi pi-plus" label="Agregar" (onClick)="abrirDialogoAgregar()" />
+  </div>
+</div>
+
+<p-table #tabla [value]="paypalsFiltrados()" [loading]="cargando()" [paginator]="true" [rows]="50"
+         [rowsPerPageOptions]="[50, 100, 150]" [showCurrentPageReport]="true" currentPageReportTemplate="{totalRecords} registros"
+         stripedRows [scrollable]="true" scrollHeight="65vh"
+         sortField="descripcion" [sortOrder]="1" [tableStyle]="{ 'min-width': '60rem' }" editMode="cell">
+  <ng-template #header>
+    <tr>
+      <th scope="col" pSortableColumn="banco">Banco <p-sortIcon field="banco" /></th>
+      <th scope="col" pSortableColumn="clabe">CLABE <p-sortIcon field="clabe" /></th>
+      <th scope="col" pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion" /></th>
+      <th scope="col" pSortableColumn="navegador">Navegador <p-sortIcon field="navegador" /></th>
+      <th scope="col" pSortableColumn="propietario">Propietario <p-sortIcon field="propietario" /></th>
+      <th scope="col" style="width: 100px">Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-paypal>
+    <tr>
+      <td [pEditableColumn]="paypal.banco" pEditableColumnField="banco">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="paypal.banco" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ paypal.banco }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="paypal.clabe" pEditableColumnField="clabe">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="paypal.clabe" appSoloNumeros (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" inputmode="numeric" />
+          </ng-template>
+          <ng-template #output>
+            {{ paypal.clabe }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="paypal.descripcion" pEditableColumnField="descripcion">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="paypal.descripcion" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" type="email" />
+          </ng-template>
+          <ng-template #output>
+            {{ paypal.descripcion }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="paypal.navegador" pEditableColumnField="navegador">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="paypal.navegador" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ paypal.navegador }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="paypal.propietario" pEditableColumnField="propietario">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="paypal.propietario" appSoloLetras (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ paypal.propietario }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td class="acciones">
+        <p-button icon="pi pi-pencil" severity="info" [text]="true" (onClick)="abrirDialogoEditar(paypal)" />
+        <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="confirmarEliminar(paypal)" />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="6" class="texto-vacio">No hay paypals registrados</td>
+    </tr>
+  </ng-template>
+</p-table>

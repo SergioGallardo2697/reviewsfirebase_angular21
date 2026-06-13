@@ -1,0 +1,73 @@
+<p-toast />
+<p-confirmDialog />
+
+<div class="cabecera">
+  <h2>Vendedores</h2>
+  <div class="acciones-cabecera">
+    <p-iconfield class="campo-busqueda">
+      <p-inputicon styleClass="pi pi-search" />
+      <input pInputText [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar vendedor..." />
+    </p-iconfield>
+    <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar(tabla)" />
+    <p-button icon="pi pi-plus" label="Agregar" (onClick)="abrirDialogoAgregar()" />
+  </div>
+</div>
+
+<p-table #tabla [value]="vendedoresFiltrados()" [loading]="cargando()" [paginator]="true" [rows]="50"
+         [rowsPerPageOptions]="[50, 100, 150]" [showCurrentPageReport]="true" currentPageReportTemplate="{totalRecords} registros"
+         stripedRows [scrollable]="true" scrollHeight="65vh"
+         sortField="nombre" [sortOrder]="1" [tableStyle]="{ 'min-width': '50rem' }" editMode="cell">
+  <ng-template #header>
+    <tr>
+      <th scope="col" pSortableColumn="nombre">Nombre <p-sortIcon field="nombre" /></th>
+      <th scope="col" pSortableColumn="facebook">Facebook <p-sortIcon field="facebook" /></th>
+      <th scope="col" pSortableColumn="whatsapp">WhatsApp <p-sortIcon field="whatsapp" /></th>
+      <th scope="col" style="width: 100px">Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-vendedor>
+    <tr>
+      <td [pEditableColumn]="vendedor.nombre" pEditableColumnField="nombre">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="vendedor.nombre" appSoloLetras (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ vendedor.nombre }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="vendedor.facebook" pEditableColumnField="facebook">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="vendedor.facebook" (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ vendedor.facebook || '—' }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="vendedor.whatsapp" pEditableColumnField="whatsapp">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="vendedor.whatsapp" appSoloNumeros (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" inputmode="numeric" />
+          </ng-template>
+          <ng-template #output>
+            {{ vendedor.whatsapp || '—' }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td class="acciones">
+        <p-button icon="pi pi-pencil" severity="info" [text]="true" (onClick)="abrirDialogoEditar(vendedor)" />
+        <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="confirmarEliminar(vendedor)" />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="4" class="texto-vacio">No hay vendedores registrados</td>
+    </tr>
+  </ng-template>
+</p-table>

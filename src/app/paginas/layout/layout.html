@@ -1,0 +1,49 @@
+<mat-sidenav-container class="contenedor-app">
+  <mat-sidenav [mode]="esMobile() ? 'over' : 'side'" [opened]="menuAbierto()" (closed)="menuAbierto.set(false)" class="sidenav">
+    <div class="logo-menu">
+      <mat-icon class="logo-icono">rate_review</mat-icon>
+      <span class="logo-texto">Reviews</span>
+    </div>
+
+    <mat-nav-list>
+      @for (item of menuItems; track item.ruta) {
+        <a mat-list-item (click)="navegarY(item.ruta)" routerLinkActive="activo" [routerLink]="item.ruta">
+          <mat-icon matListItemIcon>{{ item.icono }}</mat-icon>
+          <span matListItemTitle>{{ item.etiqueta }}</span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <div class="spacer"></div>
+
+    @if (autenticacionService.usuarioActual(); as usuario) {
+      <div class="tarjeta-usuario">
+        <div class="info-usuario">
+          @if (usuario.photoURL) {
+            <img [src]="usuario.photoURL" [alt]="usuario.displayName || 'Usuario'" class="avatar" referrerpolicy="no-referrer" />
+          } @else {
+            <div class="avatar avatar-iniciales">{{ obtenerIniciales(usuario.displayName || usuario.email || '?') }}</div>
+          }
+          <div class="datos-usuario">
+            <span class="nombre-usuario">{{ usuario.displayName || 'Usuario' }}</span>
+            <span class="correo-usuario">{{ usuario.email }}</span>
+          </div>
+        </div>
+        <button mat-icon-button class="boton-cerrar-sesion" (click)="cerrarSesion()" matTooltip="Cerrar sesión" aria-label="Cerrar sesión">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    }
+  </mat-sidenav>
+
+  <mat-sidenav-content class="contenido-principal">
+    <mat-toolbar class="toolbar-superior">
+      <button mat-icon-button (click)="toggleMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-toolbar>
+    <div class="contenido-pagina">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
