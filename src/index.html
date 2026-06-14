@@ -8,6 +8,11 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      No se usa el atributo "integrity" (SRI) en las fuentes de Google: Google sirve
+      CSS variable según el navegador y lo actualiza periódicamente, por lo que cualquier
+      hash quedaría obsoleto y rompería la carga de fuentes e iconos. Riesgo aceptado.
+    -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
       rel="stylesheet"

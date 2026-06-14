@@ -7,6 +7,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { SoloLetrasDirective } from '../../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.directive';
 
+// Datos que recibe y devuelve el diálogo
+export interface DatosDialogoVendedor {
+  nombre: string;
+  facebook: string;
+  whatsapp: string;
+  editando: boolean;
+}
+
 @Component({
   selector: 'app-dialogo-vendedor',
   imports: [
@@ -18,47 +26,13 @@ import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.dire
     SoloLetrasDirective,
     SoloNumerosDirective
   ],
-  template: `
-    <h2 mat-dialog-title>{{ datos.editando ? 'Editar' : 'Nuevo' }} Vendedor</h2>
-    <mat-dialog-content [formGroup]="formulario">
-      <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>Nombre</mat-label>
-        <input matInput formControlName="nombre" appSoloLetras />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>Facebook (opcional)</mat-label>
-        <input matInput formControlName="facebook" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>WhatsApp (opcional)</mat-label>
-        <input matInput formControlName="whatsapp" appSoloNumeros inputmode="numeric" />
-      </mat-form-field>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="cancelar()">Cancelar</button>
-      <button mat-flat-button color="primary" (click)="guardar()" [disabled]="formulario.invalid">Guardar</button>
-    </mat-dialog-actions>
-  `,
-  styles: [`
-    .campo-completo {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-    mat-dialog-content {
-      display: flex;
-      flex-direction: column;
-      min-width: 350px;
-      padding-top: 1rem;
-      overflow: visible;
-    }
-  `]
+  templateUrl: './dialogo-vendedor.html',
+  styleUrl: './dialogo-vendedor.scss'
 })
 export class DialogoVendedor implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<DialogoVendedor>);
   private readonly fb = inject(FormBuilder);
-  datos = inject(MAT_DIALOG_DATA);
+  datos = inject<DatosDialogoVendedor>(MAT_DIALOG_DATA);
 
   formulario: FormGroup = this.fb.group({
     nombre: ['', Validators.required],

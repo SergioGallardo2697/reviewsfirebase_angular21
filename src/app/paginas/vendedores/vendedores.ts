@@ -11,18 +11,10 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
 import { FirestoreService, Vendedor } from '../../core/servicios/firestore.service';
-import { DialogoVendedor } from './dialogo-vendedor/dialogo-vendedor';
+import { DialogoVendedor, DatosDialogoVendedor } from './dialogo-vendedor/dialogo-vendedor';
 import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
-
-// Tipado fuerte para los datos que recibe/devuelve el diálogo
-interface DatosDialogoVendedor {
-  nombre: string;
-  facebook: string;
-  whatsapp: string;
-  editando: boolean;
-}
 
 const ANCHO_DIALOGO = '450px';
 const CAMPO_ORDEN_DEFECTO = 'nombre';

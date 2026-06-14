@@ -25,15 +25,16 @@
   </div>
 
   <div class="campo-primeng">
-    <label class="etiqueta-primeng">Vendedor</label>
+    <label class="etiqueta-primeng" for="select-vendedor">Vendedor</label>
     <p-select
+      inputId="select-vendedor"
       [options]="vendedoresOpciones()"
       optionLabel="nombre"
       optionValue="nombre"
       [filter]="true"
       filterBy="nombre"
       placeholder="Seleccionar vendedor..."
-      [formControl]="$any(formulario.get('nombreVendedor'))"
+      [formControl]="formulario.controls.nombreVendedor"
       (onChange)="alCambiarVendedor($event.value)"
       styleClass="selector-completo" />
   </div>
@@ -52,32 +53,35 @@
 
   <div class="fila-campos">
     <div class="campo-primeng campo-mitad">
-      <label class="etiqueta-primeng">Plataforma</label>
+      <label class="etiqueta-primeng" for="select-plataforma">Plataforma</label>
       <p-select
+        inputId="select-plataforma"
         [options]="plataformas"
-        [formControl]="$any(formulario.get('plataforma'))"
+        [formControl]="formulario.controls.plataforma"
         styleClass="selector-completo" />
     </div>
 
     <div class="campo-primeng campo-mitad">
-      <label class="etiqueta-primeng">Ciudad Entrega</label>
+      <label class="etiqueta-primeng" for="select-ciudad">Ciudad Entrega</label>
       <p-select
+        inputId="select-ciudad"
         [options]="ciudades"
-        [formControl]="$any(formulario.get('ciudadentrega'))"
+        [formControl]="formulario.controls.ciudadentrega"
         styleClass="selector-completo" />
     </div>
   </div>
 
   <div class="campo-primeng">
-    <label class="etiqueta-primeng">PayPal</label>
+    <label class="etiqueta-primeng" for="select-paypal">PayPal</label>
     <p-select
+      inputId="select-paypal"
       [options]="paypalsOpciones()"
       optionLabel="descripcion"
       optionValue="descripcion"
       [filter]="true"
       filterBy="descripcion"
       placeholder="Seleccionar paypal..."
-      [formControl]="$any(formulario.get('paypal'))"
+      [formControl]="formulario.controls.paypal"
       [showClear]="true"
       styleClass="selector-completo" />
   </div>

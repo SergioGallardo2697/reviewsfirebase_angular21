@@ -1,12 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectModule } from 'primeng/select';
-import { FormsModule } from '@angular/forms';
 import { FirestoreService, Vendedor, Paypal } from '../../../core/servicios/firestore.service';
 import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.directive';
 import { SoloDecimalesDirective } from '../../../core/directivas/solo-decimales.directive';
@@ -69,7 +68,7 @@ export class DialogoCompra implements OnInit {
   // Referencia interna para buscar vendedor por nombre
   private vendedoresLista: Vendedor[] = [];
 
-  formulario: FormGroup = this.fb.group({
+  formulario = this.fb.nonNullable.group({
     fechaCompra: ['', Validators.required],
     nombreProducto: ['', Validators.required],
     precio: ['', Validators.required],
@@ -90,14 +89,18 @@ export class DialogoCompra implements OnInit {
     fechaEntrega: ['']
   });
 
-  async ngOnInit() {
+  ngOnInit() {
+    void this.inicializar();
+  }
+
+  private async inicializar() {
     await this.cargarCatalogos();
 
     if (this.datos.editando) {
       this.formulario.patchValue({
         fechaCompra: this.datos.fechaCompra || '',
         nombreProducto: this.datos.nombreProducto || '',
-        precio: this.datos.precio ?? '',
+        precio: String(this.datos.precio ?? ''),
         nombreVendedor: this.datos.nombreVendedor || '',
         whatsappVendedor: this.datos.whatsappVendedor || '',
         facebookVendedor: this.datos.facebookVendedor || '',
@@ -159,8 +162,12 @@ export class DialogoCompra implements OnInit {
     if (this.formulario.valid) {
       // getRawValue() incluye los campos deshabilitados (whatsapp y facebook vendedor)
       const valores = this.formulario.getRawValue();
-      valores.precio = parseFloat(valores.precio) || 0;
-      this.dialogRef.close(valores);
+      const resultado: DatosDialogoCompra = {
+        ...valores,
+        precio: Number.parseFloat(valores.precio) || 0,
+        editando: this.datos.editando
+      };
+      this.dialogRef.close(resultado);
     }
   }
 }

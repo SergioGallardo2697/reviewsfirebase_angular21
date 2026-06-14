@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -47,7 +48,7 @@ const CAMPO_ORDEN_DEFECTO = 'fechaCompra';
   templateUrl: './compras.html',
   styleUrl: './compras.scss'
 })
-export class Compras implements OnInit, OnDestroy {
+export class Compras {
   private readonly firestoreService = inject(FirestoreService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
@@ -70,8 +71,6 @@ export class Compras implements OnInit, OnDestroy {
   readonly filtrosActivos = computed(() =>
     this.filtroCiudades().length > 0 || this.filtroEntregadas() !== null || this.filtroImagen() !== null
   );
-
-  private suscripcionRuta?: import('rxjs').Subscription;
 
   readonly plataformas = ['Mercadolibre', 'Amazon', 'Tiktok', 'Shein', 'Temu'];
   readonly ciudades = ['Guamúchil', 'Culiacán', 'Navolato'];
@@ -129,20 +128,17 @@ export class Compras implements OnInit, OnDestroy {
     return lista;
   });
 
-  ngOnInit() {
+  constructor() {
     // Suscripción al observable de la URL para detectar cambios de segmento
-    // aunque el componente sea reutilizado por Angular entre subrutas
-    this.suscripcionRuta = this.rutaActiva.url.subscribe(segmentos => {
+    // aunque el componente sea reutilizado por Angular entre subrutas.
+    // takeUntilDestroyed cancela la suscripción al destruir el componente.
+    this.rutaActiva.url.pipe(takeUntilDestroyed()).subscribe(segmentos => {
       const segmento = segmentos[0]?.path ?? 'todas';
       this.segmentoActual.set(segmento);
       this.busqueda.set('');
       this.busquedaPrecio.set('');
       this.cargar(segmento);
     });
-  }
-
-  ngOnDestroy() {
-    this.suscripcionRuta?.unsubscribe();
   }
 
   async cargar(segmento: string) {
@@ -197,7 +193,7 @@ export class Compras implements OnInit, OnDestroy {
   exportarCsv() {
     const lista = this.comprasFiltradas();
     const filas = lista.map(c =>
-      `${c.id},${(c.nombreProducto || '').replace(/,/g, ' ')}`
+      `${c.id},${(c.nombreProducto || '').replaceAll(',', ' ')}`
     );
     const contenido = 'ID,Nombre del Producto\n' + filas.join('\n');
     const blob = new Blob(['\uFEFF' + contenido], { type: 'text/csv;charset=utf-8;' });
@@ -214,13 +210,9 @@ export class Compras implements OnInit, OnDestroy {
       const { id, ...datos } = compra;
 
       // Al marcar como entregada se registra la fecha actual; al desmarcar se borra
-      if (datos.bcompraEntregada && !datos.fechaEntrega) {
-        datos.fechaEntrega = new Date().toISOString().split('T')[0];
-        compra.fechaEntrega = datos.fechaEntrega;
-      } else if (!datos.bcompraEntregada) {
-        datos.fechaEntrega = '';
-        compra.fechaEntrega = '';
-      }
+      const fechaEntrega = this.resolverFechaEntrega(datos.bcompraEntregada, datos.fechaEntrega);
+      datos.fechaEntrega = fechaEntrega;
+      compra.fechaEntrega = fechaEntrega;
 
       await this.firestoreService.actualizarCompra(compra.id, datos);
 
@@ -297,11 +289,7 @@ export class Compras implements OnInit, OnDestroy {
         const datosGuardar = { ...camposCompra, precio: Number(camposCompra.precio) || 0 };
 
         // Si se marcó como entregada y no tiene fecha, se asigna la fecha actual
-        if (datosGuardar.bcompraEntregada && !datosGuardar.fechaEntrega) {
-          datosGuardar.fechaEntrega = new Date().toISOString().split('T')[0];
-        } else if (!datosGuardar.bcompraEntregada) {
-          datosGuardar.fechaEntrega = '';
-        }
+        datosGuardar.fechaEntrega = this.resolverFechaEntrega(datosGuardar.bcompraEntregada, datosGuardar.fechaEntrega);
 
         if (id) {
           await this.firestoreService.actualizarCompra(id, datosGuardar);
@@ -339,6 +327,13 @@ export class Compras implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  // Calcula la fecha de entrega: hoy si se entrega sin fecha previa,
+  // vacía si no está entregada, o conserva la fecha existente
+  private resolverFechaEntrega(entregada: boolean, fechaActual: string): string {
+    if (!entregada) return '';
+    return fechaActual || new Date().toISOString().split('T')[0];
   }
 
   private mostrarExito(detalle: string) {

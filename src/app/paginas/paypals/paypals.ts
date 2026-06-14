@@ -11,20 +11,10 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
 import { FirestoreService, Paypal } from '../../core/servicios/firestore.service';
-import { DialogoPaypal } from './dialogo-paypal/dialogo-paypal';
+import { DialogoPaypal, DatosDialogoPaypal } from './dialogo-paypal/dialogo-paypal';
 import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
-
-// Tipado fuerte para los datos que recibe/devuelve el diálogo
-interface DatosDialogoPaypal {
-  banco: string;
-  clabe: string;
-  descripcion: string;
-  navegador: string;
-  propietario: string;
-  editando: boolean;
-}
 
 const ANCHO_DIALOGO = '450px';
 const CAMPO_ORDEN_DEFECTO = 'descripcion';

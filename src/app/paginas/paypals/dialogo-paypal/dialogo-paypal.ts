@@ -7,6 +7,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { SoloLetrasDirective } from '../../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.directive';
 
+// Datos que recibe y devuelve el diálogo
+export interface DatosDialogoPaypal {
+  banco: string;
+  clabe: string;
+  descripcion: string;
+  navegador: string;
+  propietario: string;
+  editando: boolean;
+}
+
 @Component({
   selector: 'app-dialogo-paypal',
   imports: [
@@ -24,7 +34,7 @@ import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.dire
 export class DialogoPaypal implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<DialogoPaypal>);
   private readonly fb = inject(FormBuilder);
-  datos = inject(MAT_DIALOG_DATA);
+  datos = inject<DatosDialogoPaypal>(MAT_DIALOG_DATA);
 
   formulario: FormGroup = this.fb.group({
     banco: ['', Validators.required],
