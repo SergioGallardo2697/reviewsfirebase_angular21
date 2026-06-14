@@ -90,6 +90,22 @@
   font-size: 0.9rem;
 }
 
+.celda-usuario { max-width: 120px; }
+.celda-producto { max-width: 180px; }
+.celda-paypal { max-width: 140px; }
+
+.texto-truncado {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+
+  &--usuario  { max-width: 110px; }
+  &--producto { max-width: 160px; }
+  &--paypal   { max-width: 125px; }
+}
+
 .texto-vacio {
   text-align: center;
   padding: 2rem;
