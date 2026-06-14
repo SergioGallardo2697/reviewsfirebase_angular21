@@ -21,7 +21,8 @@ export const routes: Routes = [
           { path: '', redirectTo: 'todas', pathMatch: 'full' },
           { path: 'todas', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) },
           { path: 'con-resena', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) },
-          { path: 'sin-resena', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) }
+          { path: 'sin-resena', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) },
+          { path: 'buscar', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) }
         ]
       }
     ]

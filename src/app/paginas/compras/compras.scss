@@ -27,6 +27,22 @@
   width: 140px;
 }
 
+.rango-fechas {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .campo-fecha {
+    width: 150px;
+    font-size: 0.875rem;
+  }
+
+  .separador-rango {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.875rem;
+  }
+}
+
 .panel-filtros {
   display: flex;
   flex-direction: column;
@@ -73,6 +89,26 @@
   .campo-busqueda input {
     width: 100%;
   }
+
+  .rango-fechas {
+    width: 100%;
+    flex-wrap: wrap;
+
+    .campo-fecha {
+      flex: 1 1 40%;
+      width: auto;
+      min-width: 0;
+    }
+
+    p-button {
+      flex: 1 1 100%;
+    }
+
+    p-button ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }
 
 .campo-editable {
@@ -80,14 +116,30 @@
 }
 
 .acciones {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.acciones-contenedor {
   display: flex;
   gap: 0.25rem;
   align-items: center;
+  justify-content: center;
 }
 
 .celda-icono {
   text-align: center;
   font-size: 0.9rem;
+}
+
+.id-truncado {
+  display: inline-block;
+  max-width: 5ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  cursor: default;
 }
 
 .celda-usuario { max-width: 120px; }
@@ -110,4 +162,27 @@
   text-align: center;
   padding: 2rem;
   color: var(--mat-sys-on-surface-variant);
+}
+
+// Alertas por antigüedad desde la fecha de entrega.
+// Se tiñe la fila completa y se marca con un borde izquierdo de acento.
+.alerta-entrega-azul > td {
+  background-color: #e7f1fd !important;
+}
+.alerta-entrega-azul > td:first-child {
+  box-shadow: inset 4px 0 0 0 #2196f3;
+}
+
+.alerta-entrega-amarillo > td {
+  background-color: #fff6e0 !important;
+}
+.alerta-entrega-amarillo > td:first-child {
+  box-shadow: inset 4px 0 0 0 #f5a623;
+}
+
+.alerta-entrega-rojo > td {
+  background-color: #fde8e8 !important;
+}
+.alerta-entrega-rojo > td:first-child {
+  box-shadow: inset 4px 0 0 0 #e53935;
 }

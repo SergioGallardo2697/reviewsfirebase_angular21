@@ -64,6 +64,12 @@ export class Compras {
   readonly cargando = signal(true);
   readonly segmentoActual = signal('todas');
 
+  // Búsqueda por rango de fechaCompra
+  readonly fechaInicio = signal('');
+  readonly fechaFin = signal('');
+  readonly busquedaRealizada = signal(false);
+  readonly esModoBusqueda = computed(() => this.segmentoActual() === 'buscar');
+
   readonly filtroCiudades = signal<string[]>([]);
   readonly filtroEntregadas = signal<boolean | null>(null);
   readonly filtroImagen = signal<boolean | null>(null);
@@ -83,6 +89,7 @@ export class Compras {
   });
 
   readonly tituloPagina = computed(() => {
+    if (this.segmentoActual() === 'buscar') return 'Buscar Compras por Fecha';
     const filtro = this.filtroResena();
     if (filtro === true) return 'Compras con Reseña';
     if (filtro === false) return 'Compras sin Reseña';
@@ -137,6 +144,9 @@ export class Compras {
       this.segmentoActual.set(segmento);
       this.busqueda.set('');
       this.busquedaPrecio.set('');
+      this.fechaInicio.set('');
+      this.fechaFin.set('');
+      this.busquedaRealizada.set(false);
       this.cargar(segmento);
     });
   }
@@ -144,8 +154,21 @@ export class Compras {
   async cargar(segmento: string) {
     this.cargando.set(true);
     try {
-      let consultaCompras: Promise<Compra[]>;
+      const promesaCatalogos = Promise.all([
+        this.firestoreService.obtenerVendedoresOrdenados(),
+        this.firestoreService.obtenerPaypalsOrdenados()
+      ]);
 
+      // En modo búsqueda no se trae ninguna compra hasta que el usuario indique el rango
+      if (segmento === 'buscar') {
+        const [vendedores, paypals] = await promesaCatalogos;
+        this.vendedoresOpciones.set(vendedores);
+        this.paypalsOpciones.set(paypals);
+        this.compras.set([]);
+        return;
+      }
+
+      let consultaCompras: Promise<Compra[]>;
       if (segmento === 'con-resena') {
         consultaCompras = this.firestoreService.obtenerComprasPorResena(true);
       } else if (segmento === 'sin-resena') {
@@ -154,16 +177,39 @@ export class Compras {
         consultaCompras = this.firestoreService.obtenerCompras();
       }
 
-      const [datos, vendedores, paypals] = await Promise.all([
-        consultaCompras,
-        this.firestoreService.obtenerVendedoresOrdenados(),
-        this.firestoreService.obtenerPaypalsOrdenados()
-      ]);
+      const [datos, [vendedores, paypals]] = await Promise.all([consultaCompras, promesaCatalogos]);
       this.compras.set(datos);
       this.vendedoresOpciones.set(vendedores);
       this.paypalsOpciones.set(paypals);
     } catch {
       this.mostrarError('No se pudieron cargar las compras');
+    } finally {
+      this.cargando.set(false);
+    }
+  }
+
+  // Busca compras en Firestore acotadas por el rango de fechaCompra seleccionado
+  async buscarPorRango() {
+    const inicio = this.fechaInicio();
+    const fin = this.fechaFin();
+    if (!inicio || !fin) {
+      this.mostrarError('Selecciona la fecha de inicio y la fecha de fin');
+      return;
+    }
+    if (inicio > fin) {
+      this.mostrarError('La fecha de inicio no puede ser mayor que la fecha de fin');
+      return;
+    }
+    this.cargando.set(true);
+    try {
+      const datos = await this.firestoreService.obtenerComprasPorRangoFecha(inicio, fin);
+      this.compras.set(datos);
+      this.busquedaRealizada.set(true);
+      if (datos.length === 0) {
+        this.messageService.add({ severity: 'info', summary: 'Sin resultados', detail: 'No hay compras en ese rango de fechas' });
+      }
+    } catch {
+      this.mostrarError('No se pudieron buscar las compras');
     } finally {
       this.cargando.set(false);
     }
@@ -218,13 +264,24 @@ export class Compras {
 
       // Si hay filtro activo, recargamos para que los registros que ya no
       // cumplen la condición desaparezcan de la tabla
-      const segmento = this.segmentoActual();
-      if (segmento !== 'todas') {
-        await this.cargar(segmento);
+      if (this.segmentoActual() !== 'todas') {
+        await this.recargarVistaActual();
       }
     } catch {
       this.mostrarError('No se pudo guardar el cambio');
     }
+  }
+
+  // Recarga la vista respetando el modo actual: en "buscar" repite la consulta por
+  // rango (si ya se buscó), evitando que la lista quede vacía tras una edición
+  private async recargarVistaActual() {
+    if (this.segmentoActual() === 'buscar') {
+      if (this.busquedaRealizada()) {
+        await this.buscarPorRango();
+      }
+      return;
+    }
+    await this.cargar(this.segmentoActual());
   }
 
   abrirDialogoAgregar() {
@@ -301,7 +358,7 @@ export class Compras {
           });
           this.mostrarExito('Compra creada correctamente');
         }
-        await this.cargar(this.segmentoActual());
+        await this.recargarVistaActual();
       } catch {
         this.mostrarError('No se pudo guardar la compra');
       }
@@ -320,13 +377,40 @@ export class Compras {
       accept: async () => {
         try {
           await this.firestoreService.eliminarCompra(id);
-          await this.cargar(this.segmentoActual());
+          await this.recargarVistaActual();
           this.messageService.add({ severity: 'warn', summary: 'Eliminado', detail: 'Compra eliminada' });
         } catch {
           this.mostrarError('No se pudo eliminar la compra');
         }
       }
     });
+  }
+
+  // Devuelve la clase CSS de alerta según los días transcurridos desde la entrega:
+  // azul a partir de 14 días, amarillo desde 21 y rojo desde 29.
+  // No aplica en la sección "todas", solo en con-reseña y sin-reseña
+  claseAlertaEntrega(compra: Compra): string {
+    const segmento = this.segmentoActual();
+    if (segmento === 'todas' || segmento === 'buscar') return '';
+    const dias = this.diasDesdeEntrega(compra.fechaEntrega);
+    if (dias === null) return '';
+    if (dias >= 29) return 'alerta-entrega-rojo';
+    if (dias >= 21) return 'alerta-entrega-amarillo';
+    if (dias >= 14) return 'alerta-entrega-azul';
+    return '';
+  }
+
+  // Calcula los días completos transcurridos desde la fecha de entrega (formato YYYY-MM-DD).
+  // Devuelve null si no hay fecha válida
+  private diasDesdeEntrega(fechaEntrega: string): number | null {
+    if (!fechaEntrega) return null;
+    const partes = fechaEntrega.split('-').map(Number);
+    if (partes.length !== 3 || partes.some(n => Number.isNaN(n))) return null;
+    const [anio, mes, dia] = partes;
+    const inicioEntrega = Date.UTC(anio, mes - 1, dia);
+    const ahora = new Date();
+    const inicioHoy = Date.UTC(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+    return Math.floor((inicioHoy - inicioEntrega) / 86400000);
   }
 
   // Calcula la fecha de entrega: hoy si se entrega sin fecha previa,

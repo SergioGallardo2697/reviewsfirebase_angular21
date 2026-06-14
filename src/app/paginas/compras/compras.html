@@ -4,6 +4,16 @@
 <div class="cabecera">
   <h2>{{ tituloPagina() }}</h2>
   <div class="acciones-cabecera">
+    @if (esModoBusqueda()) {
+      <div class="rango-fechas">
+        <input pInputText type="date" [ngModel]="fechaInicio()" (ngModelChange)="fechaInicio.set($event)"
+          pTooltip="Fecha de inicio" class="campo-fecha" />
+        <span class="separador-rango">a</span>
+        <input pInputText type="date" [ngModel]="fechaFin()" (ngModelChange)="fechaFin.set($event)"
+          pTooltip="Fecha de fin" class="campo-fecha" />
+        <p-button icon="pi pi-search" label="Buscar" (onClick)="buscarPorRango()" />
+      </div>
+    }
     <p-iconfield class="campo-busqueda">
       <p-inputicon styleClass="pi pi-search" />
       <input pInputText [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar compra..." />
@@ -63,6 +73,7 @@
          sortField="fechaCompra" [sortOrder]="1" [tableStyle]="{ 'min-width': '90rem' }" editMode="cell">
   <ng-template #header>
     <tr>
+      <th scope="col" style="min-width: 55px">id</th>
       <th scope="col" pSortableColumn="fechaCompra" style="min-width: 90px">Fecha <p-sortIcon field="fechaCompra" /></th>
       <th scope="col" pSortableColumn="nombreProducto" style="min-width: 130px; max-width: 180px">Producto <p-sortIcon field="nombreProducto" /></th>
       <th scope="col" pSortableColumn="precio" style="min-width: 75px">Precio <p-sortIcon field="precio" /></th>
@@ -83,7 +94,10 @@
   </ng-template>
 
   <ng-template #body let-compra>
-    <tr>
+    <tr [class]="claseAlertaEntrega(compra)">
+      <td>
+        <span class="id-truncado" [pTooltip]="compra.id" tooltipPosition="top">{{ compra.id }}</span>
+      </td>
       <td [pEditableColumn]="compra.fechaCompra" pEditableColumnField="fechaCompra">
         <p-cellEditor>
           <ng-template #input>
@@ -200,8 +214,10 @@
         <p-checkbox [(ngModel)]="compra.bnecesitaImagen" [binary]="true" (onChange)="guardarCampo(compra)" />
       </td>
       <td class="acciones">
-        <p-button icon="pi pi-pencil" severity="info" [text]="true" (onClick)="abrirDialogoEditar(compra)" />
-        <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="confirmarEliminar(compra)" />
+        <div class="acciones-contenedor">
+          <p-button icon="pi pi-pencil" severity="info" [text]="true" (onClick)="abrirDialogoEditar(compra)" />
+          <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="confirmarEliminar(compra)" />
+        </div>
       </td>
     </tr>
   </ng-template>
@@ -209,7 +225,9 @@
 
   <ng-template #emptymessage>
     <tr>
-      <td colspan="16" class="texto-vacio">No hay compras registradas</td>
+      <td colspan="17" class="texto-vacio">
+        {{ esModoBusqueda() && !busquedaRealizada() ? 'Selecciona un rango de fechas y pulsa Buscar' : 'No hay compras registradas' }}
+      </td>
     </tr>
   </ng-template>
 </p-table>

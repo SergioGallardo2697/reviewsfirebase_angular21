@@ -2,7 +2,7 @@
 <div class="contenedor-app">
   <header class="barra-superior">
     <!-- Logo de la marca -->
-    <a class="logo-menu" routerLink="/vendedores">
+    <a class="logo-menu" routerLink="/compras/sin-resena">
       <mat-icon class="logo-icono">rate_review</mat-icon>
       <span class="logo-texto">Reviews</span>
     </a>
@@ -25,10 +25,11 @@
         <a mat-menu-item (click)="confirmarTodasLasCompras()">Todas las compras</a>
         <a mat-menu-item routerLink="/compras/con-resena">Compras con Reseña</a>
         <a mat-menu-item routerLink="/compras/sin-resena">Compras sin Reseña</a>
+        <a mat-menu-item routerLink="/compras/buscar">Buscar Compras</a>
       </mat-menu>
     </nav>
 
-    <!-- Menú de usuario desplegable estilo MercadoLibre -->
+    <!-- Menú de usuario desplegable-->
     @if (autenticacionService.usuarioActual(); as usuario) {
       <button class="disparador-usuario" [matMenuTriggerFor]="menuUsuario">
         @if (usuario.photoURL) {
@@ -64,15 +65,23 @@
               <span>{{ item.etiqueta }}</span>
             </button>
           }
-          <button mat-menu-item [matMenuTriggerFor]="menuComprasMobile">
+          <!-- Opciones de Compras planas: evita el submenú anidado mal posicionado en móvil -->
+          <button mat-menu-item (click)="confirmarTodasLasCompras()">
             <mat-icon>shopping_cart</mat-icon>
-            <span>Compras</span>
+            <span>Todas las compras</span>
           </button>
-          <mat-menu #menuComprasMobile="matMenu">
-            <a mat-menu-item (click)="confirmarTodasLasCompras()">Todas las compras</a>
-            <a mat-menu-item routerLink="/compras/con-resena">Con Reseña</a>
-            <a mat-menu-item routerLink="/compras/sin-resena">Sin Reseña</a>
-          </mat-menu>
+          <a mat-menu-item routerLink="/compras/con-resena" routerLinkActive="activo">
+            <mat-icon>star</mat-icon>
+            <span>Compras con Reseña</span>
+          </a>
+          <a mat-menu-item routerLink="/compras/sin-resena" routerLinkActive="activo">
+            <mat-icon>star_border</mat-icon>
+            <span>Compras sin Reseña</span>
+          </a>
+          <a mat-menu-item routerLink="/compras/buscar" routerLinkActive="activo">
+            <mat-icon>date_range</mat-icon>
+            <span>Buscar Compras</span>
+          </a>
           <div class="separador-menu"></div>
         </div>
 

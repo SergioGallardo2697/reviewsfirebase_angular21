@@ -76,4 +76,18 @@ export class FirestoreService {
     const snapshot = await getDocs(q);
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
   }
+
+  // Consulta acotada por rango de fechaCompra (formato YYYY-MM-DD).
+  // Reduce el costo al no traer toda la colección
+  async obtenerComprasPorRangoFecha(fechaInicio: string, fechaFin: string): Promise<Compra[]> {
+    const q = query(
+      collection(db, 'compras'),
+      where('estatus', '==', 1),
+      where('fechaCompra', '>=', fechaInicio),
+      where('fechaCompra', '<=', fechaFin),
+      orderBy('fechaCompra')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
+  }
 }
