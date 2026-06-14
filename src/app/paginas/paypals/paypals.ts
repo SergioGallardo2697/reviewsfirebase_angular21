@@ -11,7 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
 import { FirestoreService, Paypal } from '../../core/servicios/firestore.service';
-import { DialogoPaypal } from './dialogo-paypal';
+import { DialogoPaypal } from './dialogo-paypal/dialogo-paypal';
 import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
@@ -134,7 +134,7 @@ export class Paypals implements OnInit {
   private abrirDialogo(datos: DatosDialogoPaypal, id?: string) {
     const dialogRef = this.dialog.open<DialogoPaypal, DatosDialogoPaypal, DatosDialogoPaypal | undefined>(
       DialogoPaypal,
-      { width: ANCHO_DIALOGO, data: datos }
+      { width: ANCHO_DIALOGO, data: datos, disableClose: true }
     );
 
     dialogRef.afterClosed().subscribe(async (resultado) => {

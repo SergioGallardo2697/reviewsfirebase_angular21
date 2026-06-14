@@ -11,46 +11,10 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase.config';
 
-// Entidad base: todas las colecciones deben tener id y estatus (eliminación lógica)
-export interface EntidadBase {
-  id?: string;
-  estatus: number;
-}
+import { EntidadBase, Vendedor, Paypal, Compra } from '../modelos/entidades';
 
-export interface Vendedor extends EntidadBase {
-  nombre: string;
-  facebook: string;
-  whatsapp: string;
-}
-
-export interface Paypal extends EntidadBase {
-  banco: string;
-  clabe: string;
-  descripcion: string;
-  navegador: string;
-  propietario: string;
-}
-
-export interface Compra extends EntidadBase {
-  fechaCompra: string;
-  nombreProducto: string;
-  precio: number;
-  nombreVendedor: string;
-  whatsappVendedor: string;
-  facebookVendedor: string;
-  plataforma: string;
-  facebookWspUtilizado: string;
-  navegadorUtilizado: string;
-  paypal: string;
-  ciudadentrega: string;
-  idMercadolibre: string;
-  usuario: string;
-  bnecesitaImagen: boolean;
-  bpublicoResena: boolean;
-  bcompraPagada: boolean;
-  bcompraEntregada: boolean;
-  fechaEntrega: string;
-}
+// Re-exportar las interfaces para mantener compatibilidad con imports existentes
+export type { EntidadBase, Vendedor, Paypal, Compra };
 
 @Injectable({ providedIn: 'root' })
 export class FirestoreService {
@@ -100,4 +64,16 @@ export class FirestoreService {
   agregarCompra = (compra: Omit<Compra, 'id'>) => this.agregar<Compra>('compras', compra);
   actualizarCompra = (id: string, datos: Partial<Compra>) => this.actualizar<Compra>('compras', id, datos);
   eliminarCompra = (id: string) => this.eliminarSuave('compras', id);
+
+  // Consulta filtrada: solo compras no pagadas con/sin reseña
+  async obtenerComprasPorResena(tieneResena: boolean): Promise<Compra[]> {
+    const q = query(
+      collection(db, 'compras'),
+      where('estatus', '==', 1),
+      where('bcompraPagada', '==', false),
+      where('bpublicoResena', '==', tieneResena)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
+  }
 }

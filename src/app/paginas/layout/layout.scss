@@ -82,6 +82,20 @@
   }
 }
 
+.nav-link-menu {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+
+  .flecha-submenu {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+  }
+}
+
 // Disparador del menú de usuario
 .disparador-usuario {
   display: flex;

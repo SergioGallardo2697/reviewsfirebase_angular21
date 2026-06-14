@@ -1,0 +1,73 @@
+.campo-completo {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.campo-mitad {
+  flex: 1;
+  min-width: 0;
+}
+
+.fila-campos {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.grid-checks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.campo-primeng {
+  margin-bottom: 1rem;
+}
+
+.etiqueta-primeng {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-bottom: 0.25rem;
+}
+
+:host ::ng-deep .selector-completo {
+  width: 100%;
+}
+
+.separador-opcionales {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant, #999);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid var(--mat-sys-outline-variant, #ddd);
+  }
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+  max-height: 70vh;
+  padding-top: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  mat-dialog-content {
+    min-width: unset;
+  }
+
+  .fila-campos {
+    flex-direction: column;
+    gap: 0;
+  }
+}

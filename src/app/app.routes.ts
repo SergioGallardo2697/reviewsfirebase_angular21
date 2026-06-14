@@ -15,7 +15,15 @@ export const routes: Routes = [
       { path: '', redirectTo: 'vendedores', pathMatch: 'full' },
       { path: 'vendedores', loadComponent: () => import('./paginas/vendedores/vendedores').then(m => m.Vendedores) },
       { path: 'paypals', loadComponent: () => import('./paginas/paypals/paypals').then(m => m.Paypals) },
-      { path: 'compras', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) }
+      {
+        path: 'compras',
+        children: [
+          { path: '', redirectTo: 'todas', pathMatch: 'full' },
+          { path: 'todas', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) },
+          { path: 'con-resena', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) },
+          { path: 'sin-resena', loadComponent: () => import('./paginas/compras/compras').then(m => m.Compras) }
+        ]
+      }
     ]
   },
   { path: '**', redirectTo: '' }

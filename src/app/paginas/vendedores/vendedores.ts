@@ -11,7 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
 import { FirestoreService, Vendedor } from '../../core/servicios/firestore.service';
-import { DialogoVendedor } from './dialogo-vendedor';
+import { DialogoVendedor } from './dialogo-vendedor/dialogo-vendedor';
 import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
@@ -124,7 +124,7 @@ export class Vendedores implements OnInit {
   private abrirDialogo(datos: DatosDialogoVendedor, id?: string) {
     const dialogRef = this.dialog.open<DialogoVendedor, DatosDialogoVendedor, DatosDialogoVendedor | undefined>(
       DialogoVendedor,
-      { width: ANCHO_DIALOGO, data: datos }
+      { width: ANCHO_DIALOGO, data: datos, disableClose: true }
     );
 
     dialogRef.afterClosed().subscribe(async (resultado) => {

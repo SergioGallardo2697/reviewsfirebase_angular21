@@ -4,11 +4,11 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
-import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
+import { SoloLetrasDirective } from '../../../core/directivas/solo-letras.directive';
+import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.directive';
 
 @Component({
-  selector: 'app-dialogo-paypal',
+  selector: 'app-dialogo-vendedor',
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -19,31 +19,21 @@ import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directi
     SoloNumerosDirective
   ],
   template: `
-    <h2 mat-dialog-title>{{ datos.editando ? 'Editar' : 'Nuevo' }} Paypal</h2>
+    <h2 mat-dialog-title>{{ datos.editando ? 'Editar' : 'Nuevo' }} Vendedor</h2>
     <mat-dialog-content [formGroup]="formulario">
       <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>Banco</mat-label>
-        <input matInput formControlName="banco" />
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" appSoloLetras />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>CLABE</mat-label>
-        <input matInput formControlName="clabe" appSoloNumeros inputmode="numeric" />
+        <mat-label>Facebook (opcional)</mat-label>
+        <input matInput formControlName="facebook" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>Descripción (correo)</mat-label>
-        <input matInput formControlName="descripcion" type="email" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>Navegador</mat-label>
-        <input matInput formControlName="navegador" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="campo-completo">
-        <mat-label>Propietario</mat-label>
-        <input matInput formControlName="propietario" appSoloLetras />
+        <mat-label>WhatsApp (opcional)</mat-label>
+        <input matInput formControlName="whatsapp" appSoloNumeros inputmode="numeric" />
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -65,26 +55,22 @@ import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directi
     }
   `]
 })
-export class DialogoPaypal implements OnInit {
-  private readonly dialogRef = inject(MatDialogRef<DialogoPaypal>);
+export class DialogoVendedor implements OnInit {
+  private readonly dialogRef = inject(MatDialogRef<DialogoVendedor>);
   private readonly fb = inject(FormBuilder);
   datos = inject(MAT_DIALOG_DATA);
 
   formulario: FormGroup = this.fb.group({
-    banco: ['', Validators.required],
-    clabe: ['', Validators.required],
-    descripcion: ['', Validators.email],
-    navegador: [''],
-    propietario: ['', Validators.required]
+    nombre: ['', Validators.required],
+    facebook: [''],
+    whatsapp: ['']
   });
 
   ngOnInit() {
     this.formulario.patchValue({
-      banco: this.datos.banco || '',
-      clabe: this.datos.clabe || '',
-      descripcion: this.datos.descripcion || '',
-      navegador: this.datos.navegador || '',
-      propietario: this.datos.propietario || ''
+      nombre: this.datos.nombre || '',
+      facebook: this.datos.facebook || '',
+      whatsapp: this.datos.whatsapp || ''
     });
   }
 

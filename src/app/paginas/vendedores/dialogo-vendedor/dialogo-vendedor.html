@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ datos.editando ? 'Editar' : 'Nuevo' }} Vendedor</h2>
+<mat-dialog-content [formGroup]="formulario">
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" appSoloLetras />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Facebook (opcional)</mat-label>
+    <input matInput formControlName="facebook" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>WhatsApp (opcional)</mat-label>
+    <input matInput formControlName="whatsapp" appSoloNumeros inputmode="numeric" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()" [disabled]="formulario.invalid">Guardar</button>
+</mat-dialog-actions>

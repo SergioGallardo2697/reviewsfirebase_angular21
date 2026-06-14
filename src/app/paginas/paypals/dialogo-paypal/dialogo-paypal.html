@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>{{ datos.editando ? 'Editar' : 'Nuevo' }} Paypal</h2>
+<mat-dialog-content [formGroup]="formulario">
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Banco</mat-label>
+    <input matInput formControlName="banco" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>CLABE</mat-label>
+    <input matInput formControlName="clabe" appSoloNumeros inputmode="numeric" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Descripción (correo)</mat-label>
+    <input matInput formControlName="descripcion" type="email" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Navegador</mat-label>
+    <input matInput formControlName="navegador" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Propietario</mat-label>
+    <input matInput formControlName="propietario" appSoloLetras />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()" [disabled]="formulario.invalid">Guardar</button>
+</mat-dialog-actions>

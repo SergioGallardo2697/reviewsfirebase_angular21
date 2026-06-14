@@ -23,6 +23,42 @@
   font-size: 0.875rem;
 }
 
+.campo-busqueda-precio input {
+  width: 140px;
+}
+
+.panel-filtros {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 180px;
+
+  h4 {
+    margin: 0.5rem 0 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+    letter-spacing: 0.03em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.filtro-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+
+  label {
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+}
+
 @media (max-width: 768px) {
   .cabecera {
     flex-direction: column;

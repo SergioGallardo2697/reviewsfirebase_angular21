@@ -1,3 +1,4 @@
+<p-confirmDialog [style]="{ width: '380px' }" />
 <div class="contenedor-app">
   <header class="barra-superior">
     <!-- Logo de la marca -->
@@ -14,6 +15,17 @@
           <span>{{ item.etiqueta }}</span>
         </a>
       }
+      <button class="nav-link nav-link-menu" [matMenuTriggerFor]="menuCompras"
+        [class.activo]="esRutaComprasActiva()">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Compras</span>
+        <mat-icon class="flecha-submenu">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menuCompras="matMenu">
+        <a mat-menu-item (click)="confirmarTodasLasCompras()">Todas las compras</a>
+        <a mat-menu-item routerLink="/compras/con-resena">Compras con Reseña</a>
+        <a mat-menu-item routerLink="/compras/sin-resena">Compras sin Reseña</a>
+      </mat-menu>
     </nav>
 
     <!-- Menú de usuario desplegable estilo MercadoLibre -->
@@ -52,6 +64,15 @@
               <span>{{ item.etiqueta }}</span>
             </button>
           }
+          <button mat-menu-item [matMenuTriggerFor]="menuComprasMobile">
+            <mat-icon>shopping_cart</mat-icon>
+            <span>Compras</span>
+          </button>
+          <mat-menu #menuComprasMobile="matMenu">
+            <a mat-menu-item (click)="confirmarTodasLasCompras()">Todas las compras</a>
+            <a mat-menu-item routerLink="/compras/con-resena">Con Reseña</a>
+            <a mat-menu-item routerLink="/compras/sin-resena">Sin Reseña</a>
+          </mat-menu>
           <div class="separador-menu"></div>
         </div>
 
