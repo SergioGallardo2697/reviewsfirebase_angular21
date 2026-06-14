@@ -12,7 +12,7 @@ export const routes: Routes = [
     loadComponent: () => import('./paginas/layout/layout').then(m => m.Layout),
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'vendedores', pathMatch: 'full' },
+      { path: '', redirectTo: 'compras/sin-resena', pathMatch: 'full' },
       { path: 'vendedores', loadComponent: () => import('./paginas/vendedores/vendedores').then(m => m.Vendedores) },
       { path: 'paypals', loadComponent: () => import('./paginas/paypals/paypals').then(m => m.Paypals) },
       {
