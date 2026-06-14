@@ -88,6 +88,17 @@ export class Compras {
     return null;
   });
 
+  readonly mostrarSaldo = computed(() => {
+    const segmento = this.segmentoActual();
+    return segmento === 'sin-resena' || segmento === 'con-resena';
+  });
+
+  readonly saldoPendiente = computed(() => {
+    return this.compras()
+      .filter(c => !c.bcompraPagada && c.estatus === 1)
+      .reduce((total, c) => total + (Number(c.precio) || 0), 0);
+  });
+
   readonly tituloPagina = computed(() => {
     if (this.segmentoActual() === 'buscar') return 'Buscar Compras por Fecha';
     const filtro = this.filtroResena();

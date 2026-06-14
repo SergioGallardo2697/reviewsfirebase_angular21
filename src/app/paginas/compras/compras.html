@@ -67,6 +67,20 @@
   </p-popover>
 </div>
 
+@if (mostrarSaldo()) {
+  <div class="banner-saldo">
+    <div class="saldo-contenido">
+      <div class="saldo-icono">
+        <i class="pi pi-wallet"></i>
+      </div>
+      <div class="saldo-info">
+        <span class="saldo-etiqueta">Saldo pendiente por cobrar</span>
+        <span class="saldo-monto">{{ saldoPendiente() | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+}
+
 <p-table #tabla [value]="comprasFiltradas()" [loading]="cargando()" [paginator]="true" [rows]="50"
          [rowsPerPageOptions]="[50, 100, 150]" [showCurrentPageReport]="true" currentPageReportTemplate="{totalRecords} registros"
          stripedRows [scrollable]="true" scrollHeight="65vh"
