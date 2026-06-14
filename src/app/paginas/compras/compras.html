@@ -2,7 +2,15 @@
 <p-confirmDialog />
 
 <div class="cabecera">
-  <h2>{{ tituloPagina() }}</h2>
+  <div class="titulo-grupo">
+    <h2>{{ tituloPagina() }}</h2>
+    @if (mostrarSaldo()) {
+      <span class="chip-saldo">
+        <i class="pi pi-wallet"></i>
+        $ {{ saldoPendiente() | number:'1.2-2' }}
+      </span>
+    }
+  </div>
   <div class="acciones-cabecera">
     @if (esModoBusqueda()) {
       <div class="rango-fechas">
@@ -66,20 +74,6 @@
     </div>
   </p-popover>
 </div>
-
-@if (mostrarSaldo()) {
-  <div class="banner-saldo">
-    <div class="saldo-contenido">
-      <div class="saldo-icono">
-        <i class="pi pi-wallet"></i>
-      </div>
-      <div class="saldo-info">
-        <span class="saldo-etiqueta">Saldo pendiente por cobrar</span>
-        <span class="saldo-monto">{{ saldoPendiente() | number:'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
-}
 
 <p-table #tabla [value]="comprasFiltradas()" [loading]="cargando()" [paginator]="true" [rows]="50"
          [rowsPerPageOptions]="[50, 100, 150]" [showCurrentPageReport]="true" currentPageReportTemplate="{totalRecords} registros"

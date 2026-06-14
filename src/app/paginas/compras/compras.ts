@@ -380,12 +380,17 @@ export class Compras {
     });
   }
 
-  // Devuelve la clase CSS de alerta según los días transcurridos desde la entrega:
-  // azul a partir de 14 días, amarillo desde 21 y rojo desde 29.
-  // No aplica en la sección "todas", solo en con-reseña y sin-reseña
+  // Devuelve la clase CSS de alerta según el segmento y el estado de la compra.
+  // En "sin-resena": entregadas se marcan en verde (listas para reseñar).
+  // En ambos segmentos filtrados: antigüedad desde entrega en azul/amarillo/rojo.
   claseAlertaEntrega(compra: Compra): string {
     const segmento = this.segmentoActual();
     if (segmento === 'todas' || segmento === 'buscar') return '';
+
+    if (segmento === 'sin-resena' && compra.bcompraEntregada) {
+      return 'alerta-entrega-verde';
+    }
+
     const dias = this.diasDesdeEntrega(compra.fechaEntrega);
     if (dias === null) return '';
     if (dias >= 29) return 'alerta-entrega-rojo';
