@@ -1,4 +1,98 @@
-<div class="pagina-vacia">
+<p-toast />
+<p-confirmDialog />
+
+<div class="cabecera">
   <h2>Compras</h2>
-  <p>Esta sección estará disponible próximamente.</p>
+  <div class="acciones-cabecera">
+    <p-iconfield class="campo-busqueda">
+      <p-inputicon styleClass="pi pi-search" />
+      <input pInputText [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar compra..." />
+    </p-iconfield>
+    <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar(tabla)" />
+    <p-button icon="pi pi-plus" label="Agregar" (onClick)="abrirDialogoAgregar()" />
+  </div>
 </div>
+
+<p-table #tabla [value]="comprasFiltradas()" [loading]="cargando()" [paginator]="true" [rows]="50"
+         [rowsPerPageOptions]="[50, 100, 150]" [showCurrentPageReport]="true" currentPageReportTemplate="{totalRecords} registros"
+         stripedRows [scrollable]="true" scrollHeight="65vh"
+         sortField="fechaCompra" [sortOrder]="-1" [tableStyle]="{ 'min-width': '80rem' }" editMode="cell">
+  <ng-template #header>
+    <tr>
+      <th scope="col" pSortableColumn="fechaCompra" style="min-width: 120px">Fecha <p-sortIcon field="fechaCompra" /></th>
+      <th scope="col" pSortableColumn="nombreProducto" style="min-width: 180px">Producto <p-sortIcon field="nombreProducto" /></th>
+      <th scope="col" pSortableColumn="precio" style="min-width: 100px">Precio <p-sortIcon field="precio" /></th>
+      <th scope="col" pSortableColumn="nombreVendedor" style="min-width: 150px">Vendedor <p-sortIcon field="nombreVendedor" /></th>
+      <th scope="col" pSortableColumn="plataforma" style="min-width: 130px">Plataforma <p-sortIcon field="plataforma" /></th>
+      <th scope="col" pSortableColumn="ciudadentrega" style="min-width: 120px">Ciudad <p-sortIcon field="ciudadentrega" /></th>
+      <th scope="col" pSortableColumn="usuario" style="min-width: 120px">Usuario <p-sortIcon field="usuario" /></th>
+      <th scope="col" style="min-width: 60px; text-align: center" pTooltip="Pagada">💲</th>
+      <th scope="col" style="min-width: 60px; text-align: center" pTooltip="Entregada">📦</th>
+      <th scope="col" style="min-width: 60px; text-align: center" pTooltip="Reseña">⭐</th>
+      <th scope="col" style="width: 100px">Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-compra>
+    <tr>
+      <td [pEditableColumn]="compra.fechaCompra" pEditableColumnField="fechaCompra">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="compra.fechaCompra" type="date" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ compra.fechaCompra }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="compra.nombreProducto" pEditableColumnField="nombreProducto">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="compra.nombreProducto" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ compra.nombreProducto }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td [pEditableColumn]="compra.precio" pEditableColumnField="precio">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="compra.precio" appSoloDecimales (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" inputmode="decimal" />
+          </ng-template>
+          <ng-template #output>
+            {{ compra.precio | number:'1.2-2' }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>{{ compra.nombreVendedor || '—' }}</td>
+      <td>
+        <p-tag [value]="compra.plataforma" [severity]="compra.plataforma === 'Mercadolibre' ? 'warn' : compra.plataforma === 'Amazon' ? 'info' : 'secondary'" />
+      </td>
+      <td>{{ compra.ciudadentrega || '—' }}</td>
+      <td [pEditableColumn]="compra.usuario" pEditableColumnField="usuario">
+        <p-cellEditor>
+          <ng-template #input>
+            <input pInputText [(ngModel)]="compra.usuario" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+          </ng-template>
+          <ng-template #output>
+            {{ compra.usuario || '—' }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td class="celda-icono">{{ compra.bcompraPagada ? '✅' : '❌' }}</td>
+      <td class="celda-icono">{{ compra.bcompraEntregada ? '✅' : '❌' }}</td>
+      <td class="celda-icono">{{ compra.bpublicoResena ? '✅' : '❌' }}</td>
+      <td class="acciones">
+        <p-button icon="pi pi-pencil" severity="info" [text]="true" (onClick)="abrirDialogoEditar(compra)" />
+        <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="confirmarEliminar(compra)" />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="11" class="texto-vacio">No hay compras registradas</td>
+    </tr>
+  </ng-template>
+</p-table>
