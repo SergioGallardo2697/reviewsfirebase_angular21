@@ -7,8 +7,11 @@ import {
   addDoc,
   query,
   where,
-  orderBy
+  orderBy,
+  onSnapshot,
+  QueryConstraint
 } from 'firebase/firestore';
+import { Observable } from 'rxjs';
 import { db } from './firebase.config';
 
 import { EntidadBase, Vendedor, Paypal, Compra } from '../modelos/entidades';
@@ -47,6 +50,20 @@ export class FirestoreService {
     await updateDoc(doc(db, nombreColeccion, id), { estatus: 0 });
   }
 
+  // Escucha en tiempo real (onSnapshot) registros activos de cualquier colección.
+  // Devuelve un Observable que cierra el listener al desuscribirse (teardown).
+  // Acepta filtros/orden adicionales vía QueryConstraint (orderBy, where, etc.).
+  escucharActivos<T extends EntidadBase>(nombreColeccion: string, ...restricciones: QueryConstraint[]): Observable<T[]> {
+    return new Observable<T[]>(observer => {
+      const q = query(collection(db, nombreColeccion), where('estatus', '==', 1), ...restricciones);
+      return onSnapshot(
+        q,
+        snap => observer.next(snap.docs.map(d => ({ id: d.id, ...d.data() } as T))),
+        err => observer.error(err)
+      );
+    });
+  }
+
   // Wrappers específicos (azúcar sintáctico, mantienen retrocompatibilidad)
   obtenerVendedores = () => this.obtenerActivos<Vendedor>('vendedores');
   obtenerVendedoresOrdenados = () => this.obtenerActivosOrdenados<Vendedor>('vendedores', 'nombre');
@@ -54,27 +71,31 @@ export class FirestoreService {
   actualizarVendedor = (id: string, datos: Partial<Vendedor>) => this.actualizar<Vendedor>('vendedores', id, datos);
   eliminarVendedor = (id: string) => this.eliminarSuave('vendedores', id);
 
+  vendedoresEnTiempoReal = () => this.escucharActivos<Vendedor>('vendedores', orderBy('nombre'));
+
   obtenerPaypals = () => this.obtenerActivos<Paypal>('paypals');
   obtenerPaypalsOrdenados = () => this.obtenerActivosOrdenados<Paypal>('paypals', 'descripcion');
   agregarPaypal = (paypal: Omit<Paypal, 'id'>) => this.agregar<Paypal>('paypals', paypal);
   actualizarPaypal = (id: string, datos: Partial<Paypal>) => this.actualizar<Paypal>('paypals', id, datos);
   eliminarPaypal = (id: string) => this.eliminarSuave('paypals', id);
 
-  obtenerCompras = () => this.obtenerActivos<Compra>('compras');
+  paypalsEnTiempoReal = () => this.escucharActivos<Paypal>('paypals', orderBy('descripcion'));
+
   agregarCompra = (compra: Omit<Compra, 'id'>) => this.agregar<Compra>('compras', compra);
   actualizarCompra = (id: string, datos: Partial<Compra>) => this.actualizar<Compra>('compras', id, datos);
   eliminarCompra = (id: string) => this.eliminarSuave('compras', id);
 
-  // Consulta filtrada: solo compras no pagadas con/sin reseña
-  async obtenerComprasPorResena(tieneResena: boolean): Promise<Compra[]> {
-    const q = query(
-      collection(db, 'compras'),
-      where('estatus', '==', 1),
+  // Listas de compras en tiempo real. tieneResena: true/false filtra no pagadas
+  // con/sin reseña; null trae todas las activas.
+  comprasEnTiempoReal(tieneResena: boolean | null): Observable<Compra[]> {
+    if (tieneResena === null) {
+      return this.escucharActivos<Compra>('compras');
+    }
+    return this.escucharActivos<Compra>(
+      'compras',
       where('bcompraPagada', '==', false),
       where('bpublicoResena', '==', tieneResena)
     );
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
   }
 
   // Consulta acotada por rango de fechaCompra (formato YYYY-MM-DD).

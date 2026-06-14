@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -38,21 +39,21 @@ const CAMPO_ORDEN_DEFECTO = 'nombre';
   templateUrl: './vendedores.html',
   styleUrl: './vendedores.scss'
 })
-export class Vendedores implements OnInit {
+export class Vendedores {
   private readonly firestoreService = inject(FirestoreService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly dialog = inject(MatDialog);
 
-  // Estado reactivo con signals
-  readonly vendedores = signal<Vendedor[]>([]);
+  // onSnapshot via Observable → signal; undefined mientras llega el primer snapshot
+  readonly vendedores = toSignal(this.firestoreService.vendedoresEnTiempoReal());
   readonly busqueda = signal('');
-  readonly cargando = signal(true);
 
-  // Lista filtrada derivada automáticamente del estado
+  readonly cargando = computed(() => this.vendedores() === undefined);
+
   readonly vendedoresFiltrados = computed(() => {
     const termino = normalizarTexto(this.busqueda());
-    const lista = this.vendedores();
+    const lista = this.vendedores() ?? [];
     if (!termino) return lista;
     return lista.filter(v =>
       normalizarTexto(v.nombre).includes(termino) ||
@@ -60,22 +61,6 @@ export class Vendedores implements OnInit {
       normalizarTexto(v.whatsapp).includes(termino)
     );
   });
-
-  ngOnInit() {
-    this.cargar();
-  }
-
-  async cargar() {
-    this.cargando.set(true);
-    try {
-      const datos = await this.firestoreService.obtenerVendedores();
-      this.vendedores.set(datos);
-    } catch {
-      this.mostrarError('No se pudieron cargar los vendedores');
-    } finally {
-      this.cargando.set(false);
-    }
-  }
 
   limpiar(tabla: Table) {
     this.busqueda.set('');
@@ -85,7 +70,6 @@ export class Vendedores implements OnInit {
     tabla.sortSingle();
   }
 
-  // Edición inline: persiste un solo registro modificado en la tabla
   async guardarCampo(vendedor: Vendedor) {
     if (!vendedor.id) return;
     try {
@@ -134,7 +118,6 @@ export class Vendedores implements OnInit {
           });
           this.mostrarExito('Vendedor creado correctamente');
         }
-        await this.cargar();
       } catch {
         this.mostrarError('No se pudo guardar el vendedor');
       }
@@ -153,7 +136,6 @@ export class Vendedores implements OnInit {
       accept: async () => {
         try {
           await this.firestoreService.eliminarVendedor(id);
-          await this.cargar();
           this.messageService.add({ severity: 'warn', summary: 'Eliminado', detail: 'Vendedor eliminado' });
         } catch {
           this.mostrarError('No se pudo eliminar el vendedor');

@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -38,21 +39,21 @@ const CAMPO_ORDEN_DEFECTO = 'descripcion';
   templateUrl: './paypals.html',
   styleUrl: './paypals.scss'
 })
-export class Paypals implements OnInit {
+export class Paypals {
   private readonly firestoreService = inject(FirestoreService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly dialog = inject(MatDialog);
 
-  // Estado reactivo con signals
-  readonly paypals = signal<Paypal[]>([]);
+  // onSnapshot via Observable → signal; undefined mientras llega el primer snapshot
+  readonly paypals = toSignal(this.firestoreService.paypalsEnTiempoReal());
   readonly busqueda = signal('');
-  readonly cargando = signal(true);
 
-  // Lista filtrada derivada automáticamente del estado
+  readonly cargando = computed(() => this.paypals() === undefined);
+
   readonly paypalsFiltrados = computed(() => {
     const termino = normalizarTexto(this.busqueda());
-    const lista = this.paypals();
+    const lista = this.paypals() ?? [];
     if (!termino) return lista;
     return lista.filter(p =>
       normalizarTexto(p.banco).includes(termino) ||
@@ -63,22 +64,6 @@ export class Paypals implements OnInit {
     );
   });
 
-  ngOnInit() {
-    this.cargar();
-  }
-
-  async cargar() {
-    this.cargando.set(true);
-    try {
-      const datos = await this.firestoreService.obtenerPaypals();
-      this.paypals.set(datos);
-    } catch {
-      this.mostrarError('No se pudieron cargar los paypals');
-    } finally {
-      this.cargando.set(false);
-    }
-  }
-
   limpiar(tabla: Table) {
     this.busqueda.set('');
     tabla.sortField = CAMPO_ORDEN_DEFECTO;
@@ -87,7 +72,6 @@ export class Paypals implements OnInit {
     tabla.sortSingle();
   }
 
-  // Edición inline: persiste un solo registro modificado en la tabla
   async guardarCampo(paypal: Paypal) {
     if (!paypal.id) return;
     try {
@@ -144,7 +128,6 @@ export class Paypals implements OnInit {
           });
           this.mostrarExito('Paypal creado correctamente');
         }
-        await this.cargar();
       } catch {
         this.mostrarError('No se pudo guardar el paypal');
       }
@@ -163,7 +146,6 @@ export class Paypals implements OnInit {
       accept: async () => {
         try {
           await this.firestoreService.eliminarPaypal(id);
-          await this.cargar();
           this.messageService.add({ severity: 'warn', summary: 'Eliminado', detail: 'Paypal eliminado' });
         } catch {
           this.mostrarError('No se pudo eliminar el paypal');

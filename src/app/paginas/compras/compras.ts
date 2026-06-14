@@ -1,5 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { of, switchMap } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +18,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { PopoverModule } from 'primeng/popover';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
-import { FirestoreService, Compra, Vendedor, Paypal } from '../../core/servicios/firestore.service';
+import { FirestoreService, Compra } from '../../core/servicios/firestore.service';
 import { DialogoCompra, DatosDialogoCompra } from './dialogo-compra/dialogo-compra';
 import { SoloDecimalesDirective } from '../../core/directivas/solo-decimales.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
@@ -56,19 +57,45 @@ export class Compras {
   private readonly rutaActiva = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  readonly compras = signal<Compra[]>([]);
-  readonly vendedoresOpciones = signal<Vendedor[]>([]);
-  readonly paypalsOpciones = signal<Paypal[]>([]);
+  readonly segmentoActual = signal('todas');
   readonly busqueda = signal('');
   readonly busquedaPrecio = signal('');
-  readonly cargando = signal(true);
-  readonly segmentoActual = signal('todas');
 
   // Búsqueda por rango de fechaCompra
   readonly fechaInicio = signal('');
   readonly fechaFin = signal('');
   readonly busquedaRealizada = signal(false);
   readonly esModoBusqueda = computed(() => this.segmentoActual() === 'buscar');
+
+  // Catálogos en tiempo real (onSnapshot). undefined hasta el primer snapshot.
+  private readonly vendedoresTr = toSignal(this.firestoreService.vendedoresEnTiempoReal());
+  private readonly paypalsTr = toSignal(this.firestoreService.paypalsEnTiempoReal());
+  readonly vendedoresOpciones = computed(() => this.vendedoresTr() ?? []);
+  readonly paypalsOpciones = computed(() => this.paypalsTr() ?? []);
+
+  // Resultados del modo "buscar" (getDocs puntual, no en tiempo real)
+  private readonly comprasBusqueda = signal<Compra[]>([]);
+
+  // Lista de compras en tiempo real según el segmento. En modo "buscar" no
+  // escucha nada (emite []), y la lista visible se toma de comprasBusqueda.
+  private readonly comprasTr = toSignal(
+    toObservable(this.segmentoActual).pipe(
+      switchMap(segmento => {
+        if (segmento === 'buscar') return of<Compra[]>([]);
+        if (segmento === 'con-resena') return this.firestoreService.comprasEnTiempoReal(true);
+        if (segmento === 'sin-resena') return this.firestoreService.comprasEnTiempoReal(false);
+        return this.firestoreService.comprasEnTiempoReal(null);
+      })
+    )
+  );
+
+  readonly compras = computed(() =>
+    this.esModoBusqueda() ? this.comprasBusqueda() : (this.comprasTr() ?? [])
+  );
+
+  readonly cargando = computed(() =>
+    this.esModoBusqueda() ? false : this.comprasTr() === undefined
+  );
 
   readonly filtroCiudades = signal<string[]>([]);
   readonly filtroEntregadas = signal<boolean | null>(null);
@@ -150,6 +177,7 @@ export class Compras {
     // Suscripción al observable de la URL para detectar cambios de segmento
     // aunque el componente sea reutilizado por Angular entre subrutas.
     // takeUntilDestroyed cancela la suscripción al destruir el componente.
+    // Al fijar segmentoActual, comprasTr conmuta solo al listener correspondiente.
     this.rutaActiva.url.pipe(takeUntilDestroyed()).subscribe(segmentos => {
       const segmento = segmentos[0]?.path ?? 'todas';
       this.segmentoActual.set(segmento);
@@ -158,45 +186,8 @@ export class Compras {
       this.fechaInicio.set('');
       this.fechaFin.set('');
       this.busquedaRealizada.set(false);
-      this.cargar(segmento);
+      this.comprasBusqueda.set([]);
     });
-  }
-
-  async cargar(segmento: string) {
-    this.cargando.set(true);
-    try {
-      const promesaCatalogos = Promise.all([
-        this.firestoreService.obtenerVendedoresOrdenados(),
-        this.firestoreService.obtenerPaypalsOrdenados()
-      ]);
-
-      // En modo búsqueda no se trae ninguna compra hasta que el usuario indique el rango
-      if (segmento === 'buscar') {
-        const [vendedores, paypals] = await promesaCatalogos;
-        this.vendedoresOpciones.set(vendedores);
-        this.paypalsOpciones.set(paypals);
-        this.compras.set([]);
-        return;
-      }
-
-      let consultaCompras: Promise<Compra[]>;
-      if (segmento === 'con-resena') {
-        consultaCompras = this.firestoreService.obtenerComprasPorResena(true);
-      } else if (segmento === 'sin-resena') {
-        consultaCompras = this.firestoreService.obtenerComprasPorResena(false);
-      } else {
-        consultaCompras = this.firestoreService.obtenerCompras();
-      }
-
-      const [datos, [vendedores, paypals]] = await Promise.all([consultaCompras, promesaCatalogos]);
-      this.compras.set(datos);
-      this.vendedoresOpciones.set(vendedores);
-      this.paypalsOpciones.set(paypals);
-    } catch {
-      this.mostrarError('No se pudieron cargar las compras');
-    } finally {
-      this.cargando.set(false);
-    }
   }
 
   // Busca compras en Firestore acotadas por el rango de fechaCompra seleccionado
@@ -211,18 +202,15 @@ export class Compras {
       this.mostrarError('La fecha de inicio no puede ser mayor que la fecha de fin');
       return;
     }
-    this.cargando.set(true);
     try {
       const datos = await this.firestoreService.obtenerComprasPorRangoFecha(inicio, fin);
-      this.compras.set(datos);
+      this.comprasBusqueda.set(datos);
       this.busquedaRealizada.set(true);
       if (datos.length === 0) {
         this.messageService.add({ severity: 'info', summary: 'Sin resultados', detail: 'No hay compras en ese rango de fechas' });
       }
     } catch {
       this.mostrarError('No se pudieron buscar las compras');
-    } finally {
-      this.cargando.set(false);
     }
   }
 
@@ -273,26 +261,21 @@ export class Compras {
 
       await this.firestoreService.actualizarCompra(compra.id, datos);
 
-      // Si hay filtro activo, recargamos para que los registros que ya no
-      // cumplen la condición desaparezcan de la tabla
-      if (this.segmentoActual() !== 'todas') {
-        await this.recargarVistaActual();
-      }
+      // En segmentos en tiempo real, onSnapshot refresca la lista solo (incluso
+      // descartando registros que ya no cumplen el filtro). Solo "buscar" necesita
+      // re-ejecutar la consulta puntual por rango.
+      await this.recargarVistaActual();
     } catch {
       this.mostrarError('No se pudo guardar el cambio');
     }
   }
 
-  // Recarga la vista respetando el modo actual: en "buscar" repite la consulta por
-  // rango (si ya se buscó), evitando que la lista quede vacía tras una edición
+  // Solo el modo "buscar" usa getDocs puntual: repite la consulta por rango si ya
+  // se buscó, para reflejar el cambio. El resto se actualiza vía onSnapshot.
   private async recargarVistaActual() {
-    if (this.segmentoActual() === 'buscar') {
-      if (this.busquedaRealizada()) {
-        await this.buscarPorRango();
-      }
-      return;
+    if (this.segmentoActual() === 'buscar' && this.busquedaRealizada()) {
+      await this.buscarPorRango();
     }
-    await this.cargar(this.segmentoActual());
   }
 
   abrirDialogoAgregar() {
