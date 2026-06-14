@@ -1,0 +1,76 @@
+<p-toast />
+
+<div class="cabecera">
+  <h2>Buscar Paypal</h2>
+  <div class="acciones-cabecera">
+    <p-select
+      [options]="vendedores()"
+      optionLabel="nombre"
+      [ngModel]="vendedorSeleccionado()"
+      (ngModelChange)="vendedorSeleccionado.set($event)"
+      placeholder="Selecciona un vendedor..."
+      [filter]="true"
+      filterBy="nombre"
+      [showClear]="true"
+      styleClass="select-vendedor"
+      appendTo="body" />
+
+    <p-iconfield pTooltip="Días sin compra con ese vendedor" [class.campo-deshabilitado]="nuncaUsados()">
+      <p-inputicon styleClass="pi pi-clock" />
+      <input
+        pInputText
+        appSoloNumeros
+        inputmode="numeric"
+        [ngModel]="diasStr()"
+        (ngModelChange)="diasStr.set($event)"
+        placeholder="Días"
+        class="input-dias"
+        [disabled]="nuncaUsados()" />
+    </p-iconfield>
+
+    <div class="opcion-nunca">
+      <p-checkbox
+        inputId="nunca-usados"
+        [binary]="true"
+        [ngModel]="nuncaUsados()"
+        (ngModelChange)="nuncaUsados.set($event)" />
+      <label for="nunca-usados">Nunca usados</label>
+    </div>
+
+    <p-button icon="pi pi-search" label="Buscar" (onClick)="buscar()" [loading]="cargando()" />
+    <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar()" />
+  </div>
+</div>
+
+<p-table [value]="paypalsDisponibles()" [loading]="cargando()" [paginator]="true" [rows]="50"
+         [rowsPerPageOptions]="[50, 100, 150]" [showCurrentPageReport]="true" currentPageReportTemplate="{totalRecords} registros"
+         stripedRows [scrollable]="true" scrollHeight="65vh"
+         sortField="descripcion" [sortOrder]="1" [tableStyle]="{ 'min-width': '60rem' }">
+  <ng-template #header>
+    <tr>
+      <th scope="col" pSortableColumn="banco">Banco <p-sortIcon field="banco" /></th>
+      <th scope="col" pSortableColumn="clabe">CLABE <p-sortIcon field="clabe" /></th>
+      <th scope="col" pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion" /></th>
+      <th scope="col" pSortableColumn="navegador">Navegador <p-sortIcon field="navegador" /></th>
+      <th scope="col" pSortableColumn="propietario">Propietario <p-sortIcon field="propietario" /></th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-paypal>
+    <tr>
+      <td>{{ paypal.banco }}</td>
+      <td>{{ paypal.clabe }}</td>
+      <td>{{ paypal.descripcion }}</td>
+      <td>{{ paypal.navegador }}</td>
+      <td>{{ paypal.propietario }}</td>
+    </tr>
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="5" class="texto-vacio">
+        {{ busquedaRealizada() ? 'No hay paypals disponibles para este vendedor en el período indicado' : 'Selecciona un vendedor y los días para buscar' }}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

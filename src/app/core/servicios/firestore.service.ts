@@ -90,4 +90,28 @@ export class FirestoreService {
     const snapshot = await getDocs(q);
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
   }
+
+  // Compras de un vendedor específico desde una fecha (YYYY-MM-DD) hasta hoy.
+  // Requiere índice compuesto en Firestore: estatus + nombreVendedor + fechaCompra
+  async obtenerComprasPorVendedorDesde(nombreVendedor: string, fechaDesde: string): Promise<Compra[]> {
+    const q = query(
+      collection(db, 'compras'),
+      where('estatus', '==', 1),
+      where('nombreVendedor', '==', nombreVendedor),
+      where('fechaCompra', '>=', fechaDesde)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
+  }
+
+  // Todas las compras de un vendedor sin restricción de fecha
+  async obtenerComprasPorVendedor(nombreVendedor: string): Promise<Compra[]> {
+    const q = query(
+      collection(db, 'compras'),
+      where('estatus', '==', 1),
+      where('nombreVendedor', '==', nombreVendedor)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Compra));
+  }
 }

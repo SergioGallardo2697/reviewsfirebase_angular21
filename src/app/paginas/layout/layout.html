@@ -15,6 +15,16 @@
           <span>{{ item.etiqueta }}</span>
         </a>
       }
+      <button class="nav-link nav-link-menu" [matMenuTriggerFor]="menuPaypals"
+        [class.activo]="esRutaPaypalsActiva()">
+        <mat-icon>account_balance</mat-icon>
+        <span>Paypals</span>
+        <mat-icon class="flecha-submenu">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menuPaypals="matMenu">
+        <a mat-menu-item routerLink="/paypals">Paypals</a>
+        <a mat-menu-item routerLink="/paypals/buscar">Buscar Paypal</a>
+      </mat-menu>
       <button class="nav-link nav-link-menu" [matMenuTriggerFor]="menuCompras"
         [class.activo]="esRutaComprasActiva()">
         <mat-icon>shopping_cart</mat-icon>
@@ -65,6 +75,15 @@
               <span>{{ item.etiqueta }}</span>
             </button>
           }
+          <!-- Opciones de Paypals planas -->
+          <a mat-menu-item routerLink="/paypals" routerLinkActive="activo">
+            <mat-icon>account_balance</mat-icon>
+            <span>Paypals</span>
+          </a>
+          <a mat-menu-item routerLink="/paypals/buscar" routerLinkActive="activo">
+            <mat-icon>search</mat-icon>
+            <span>Buscar Paypal</span>
+          </a>
           <!-- Opciones de Compras planas: evita el submenú anidado mal posicionado en móvil -->
           <button mat-menu-item (click)="confirmarTodasLasCompras()">
             <mat-icon>shopping_cart</mat-icon>

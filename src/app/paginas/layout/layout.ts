@@ -28,12 +28,15 @@ export class Layout {
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly menuItems = [
-    { ruta: '/vendedores', icono: 'people', etiqueta: 'Vendedores' },
-    { ruta: '/paypals', icono: 'account_balance', etiqueta: 'Paypals' }
+    { ruta: '/vendedores', icono: 'people', etiqueta: 'Vendedores' }
   ];
 
   esRutaComprasActiva(): boolean {
     return this.router.url.startsWith('/compras');
+  }
+
+  esRutaPaypalsActiva(): boolean {
+    return this.router.url.startsWith('/paypals');
   }
 
   confirmarTodasLasCompras() {
