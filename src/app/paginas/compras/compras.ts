@@ -348,7 +348,8 @@ export class Compras {
         } else {
           await this.firestoreService.agregarCompra({
             ...datosGuardar,
-            estatus: 1
+            estatus: 1,
+            fechaCreacion: Date.now()
           });
           this.mostrarExito('Compra creada correctamente');
         }

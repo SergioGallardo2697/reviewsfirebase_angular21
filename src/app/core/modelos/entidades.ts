@@ -37,4 +37,5 @@ export interface Compra extends EntidadBase {
   bcompraPagada: boolean;
   bcompraEntregada: boolean;
   fechaEntrega: string;
+  fechaCreacion?: number;
 }

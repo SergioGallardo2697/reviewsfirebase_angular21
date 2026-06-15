@@ -89,12 +89,13 @@ export class FirestoreService {
   // con/sin reseña; null trae todas las activas.
   comprasEnTiempoReal(tieneResena: boolean | null): Observable<Compra[]> {
     if (tieneResena === null) {
-      return this.escucharActivos<Compra>('compras');
+      return this.escucharActivos<Compra>('compras', orderBy('fechaCreacion', 'asc'));
     }
     return this.escucharActivos<Compra>(
       'compras',
       where('bcompraPagada', '==', false),
-      where('bpublicoResena', '==', tieneResena)
+      where('bpublicoResena', '==', tieneResena),
+      orderBy('fechaCreacion', 'asc')
     );
   }
 
