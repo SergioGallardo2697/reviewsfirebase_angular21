@@ -5,8 +5,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { SelectModule } from 'primeng/select';
-import { FirestoreService, Vendedor, Paypal } from '../../../core/servicios/firestore.service';
+import { FirestoreService, Vendedor, Paypal, Compra } from '../../../core/servicios/firestore.service';
 import { SoloNumerosDirective } from '../../../core/directivas/solo-numeros.directive';
 import { SoloDecimalesDirective } from '../../../core/directivas/solo-decimales.directive';
 
@@ -46,6 +47,7 @@ const CIUDADES = ['Guamúchil', 'Culiacán', 'Navolato'];
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatSnackBarModule,
     SelectModule,
     SoloNumerosDirective,
     SoloDecimalesDirective
@@ -58,6 +60,7 @@ export class DialogoCompra implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<DialogoCompra>);
   private readonly fb = inject(FormBuilder);
   private readonly firestoreService = inject(FirestoreService);
+  private readonly snackBar = inject(MatSnackBar);
   datos = inject<DatosDialogoCompra>(MAT_DIALOG_DATA);
 
   readonly vendedoresOpciones = signal<Vendedor[]>([]);
@@ -169,5 +172,44 @@ export class DialogoCompra implements OnInit {
       };
       this.dialogRef.close(resultado);
     }
+  }
+
+  async clonar() {
+    if (this.formulario.invalid) return;
+    const valores = this.formulario.getRawValue();
+    const nuevaCompra: Omit<Compra, 'id'> = {
+      fechaCompra: valores.fechaCompra,
+      nombreProducto: valores.nombreProducto,
+      precio: Number.parseFloat(valores.precio) || 0,
+      nombreVendedor: valores.nombreVendedor,
+      whatsappVendedor: valores.whatsappVendedor,
+      facebookVendedor: valores.facebookVendedor,
+      plataforma: valores.plataforma,
+      facebookWspUtilizado: valores.facebookWspUtilizado,
+      navegadorUtilizado: valores.navegadorUtilizado,
+      paypal: valores.paypal,
+      ciudadentrega: valores.ciudadentrega,
+      idMercadolibre: valores.idMercadolibre,
+      usuario: valores.usuario,
+      bnecesitaImagen: valores.bnecesitaImagen,
+      bpublicoResena: valores.bpublicoResena,
+      bcompraPagada: valores.bcompraPagada,
+      bcompraEntregada: valores.bcompraEntregada,
+      fechaEntrega: this.resolverFechaEntrega(valores.bcompraEntregada, valores.fechaEntrega),
+      estatus: 1,
+      fechaCreacion: Date.now()
+    };
+    try {
+      await this.firestoreService.agregarCompra(nuevaCompra);
+      this.snackBar.open('Compra clonada correctamente', 'Cerrar', { duration: 2500 });
+    } catch {
+      this.snackBar.open('No se pudo clonar la compra', 'Cerrar', { duration: 3000 });
+    }
+  }
+
+  // Si se marcó como entregada y no tiene fecha, se asigna la fecha actual
+  private resolverFechaEntrega(entregada: boolean, fechaActual: string): string {
+    if (!entregada) return '';
+    return fechaActual || new Date().toISOString().split('T')[0];
   }
 }
