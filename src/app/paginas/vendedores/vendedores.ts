@@ -15,6 +15,7 @@ import { FirestoreService, Vendedor } from '../../core/servicios/firestore.servi
 import { DialogoVendedor, DatosDialogoVendedor } from './dialogo-vendedor/dialogo-vendedor';
 import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
+import { EditarDobleClicDirective } from '../../core/directivas/editar-doble-clic.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
 
 const ANCHO_DIALOGO = '450px';
@@ -34,6 +35,7 @@ const CAMPO_ORDEN_DEFECTO = 'nombre';
     TooltipModule,
     SoloLetrasDirective,
     SoloNumerosDirective,
+    EditarDobleClicDirective,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './vendedores.html',

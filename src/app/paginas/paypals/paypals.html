@@ -30,7 +30,7 @@
 
   <ng-template #body let-paypal>
     <tr>
-      <td [pEditableColumn]="paypal.banco" pEditableColumnField="banco">
+      <td [pEditableColumn]="paypal.banco" pEditableColumnField="banco" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="paypal.banco" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
@@ -40,7 +40,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="paypal.clabe" pEditableColumnField="clabe">
+      <td [pEditableColumn]="paypal.clabe" pEditableColumnField="clabe" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="paypal.clabe" appSoloNumeros (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" inputmode="numeric" />
@@ -50,7 +50,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="paypal.descripcion" pEditableColumnField="descripcion">
+      <td [pEditableColumn]="paypal.descripcion" pEditableColumnField="descripcion" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="paypal.descripcion" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" type="email" />
@@ -60,7 +60,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="paypal.navegador" pEditableColumnField="navegador">
+      <td [pEditableColumn]="paypal.navegador" pEditableColumnField="navegador" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="paypal.navegador" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
@@ -70,7 +70,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="paypal.propietario" pEditableColumnField="propietario">
+      <td [pEditableColumn]="paypal.propietario" pEditableColumnField="propietario" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="paypal.propietario" appSoloLetras (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />

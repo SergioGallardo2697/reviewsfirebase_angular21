@@ -28,7 +28,7 @@
 
   <ng-template #body let-vendedor>
     <tr>
-      <td [pEditableColumn]="vendedor.nombre" pEditableColumnField="nombre">
+      <td [pEditableColumn]="vendedor.nombre" pEditableColumnField="nombre" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="vendedor.nombre" appSoloLetras (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
@@ -38,7 +38,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="vendedor.facebook" pEditableColumnField="facebook">
+      <td [pEditableColumn]="vendedor.facebook" pEditableColumnField="facebook" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="vendedor.facebook" (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
@@ -48,7 +48,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="vendedor.whatsapp" pEditableColumnField="whatsapp">
+      <td [pEditableColumn]="vendedor.whatsapp" pEditableColumnField="whatsapp" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="vendedor.whatsapp" appSoloNumeros (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" inputmode="numeric" />

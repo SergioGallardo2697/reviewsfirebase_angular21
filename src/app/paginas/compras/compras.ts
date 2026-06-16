@@ -22,6 +22,7 @@ import { FirestoreService, Compra } from '../../core/servicios/firestore.service
 import { DialogoCompra, DatosDialogoCompra } from './dialogo-compra/dialogo-compra';
 import { SoloDecimalesDirective } from '../../core/directivas/solo-decimales.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
+import { EditarDobleClicDirective } from '../../core/directivas/editar-doble-clic.directive';
 
 const ANCHO_DIALOGO = '650px';
 const CAMPO_ORDEN_DEFECTO = 'fechaCompra';
@@ -44,6 +45,7 @@ const CAMPO_ORDEN_DEFECTO = 'fechaCompra';
     PopoverModule,
     DecimalPipe,
     SoloDecimalesDirective,
+    EditarDobleClicDirective
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './compras.html',

@@ -106,7 +106,7 @@
       <td>
         <span class="id-truncado" [pTooltip]="compra.id" tooltipPosition="top">{{ compra.id }}</span>
       </td>
-      <td [pEditableColumn]="compra.fechaCompra" pEditableColumnField="fechaCompra">
+      <td [pEditableColumn]="compra.fechaCompra" pEditableColumnField="fechaCompra" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.fechaCompra" type="date" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
@@ -114,7 +114,7 @@
           <ng-template #output>{{ compra.fechaCompra }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.nombreProducto" pEditableColumnField="nombreProducto">
+      <td [pEditableColumn]="compra.nombreProducto" pEditableColumnField="nombreProducto" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.nombreProducto" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
@@ -122,7 +122,7 @@
           <ng-template #output>{{ compra.nombreProducto }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.precio" pEditableColumnField="precio">
+      <td [pEditableColumn]="compra.precio" pEditableColumnField="precio" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.precio" appSoloDecimales (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" inputmode="decimal" />
@@ -130,7 +130,7 @@
           <ng-template #output>{{ compra.precio | number:'1.2-2' }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.nombreVendedor" pEditableColumnField="nombreVendedor">
+      <td [pEditableColumn]="compra.nombreVendedor" pEditableColumnField="nombreVendedor" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <p-select [options]="vendedoresOpciones()" optionLabel="nombre" optionValue="nombre"
@@ -140,7 +140,7 @@
           <ng-template #output>{{ compra.nombreVendedor || '—' }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.plataforma" pEditableColumnField="plataforma">
+      <td [pEditableColumn]="compra.plataforma" pEditableColumnField="plataforma" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <p-select [options]="plataformas" [(ngModel)]="compra.plataforma"
@@ -151,7 +151,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.ciudadentrega" pEditableColumnField="ciudadentrega">
+      <td [pEditableColumn]="compra.ciudadentrega" pEditableColumnField="ciudadentrega" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <p-select [options]="ciudades" [(ngModel)]="compra.ciudadentrega"
@@ -163,7 +163,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.facebookWspUtilizado" pEditableColumnField="facebookWspUtilizado">
+      <td [pEditableColumn]="compra.facebookWspUtilizado" pEditableColumnField="facebookWspUtilizado" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.facebookWspUtilizado" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
@@ -171,7 +171,7 @@
           <ng-template #output>{{ compra.facebookWspUtilizado || '—' }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.navegadorUtilizado" pEditableColumnField="navegadorUtilizado">
+      <td [pEditableColumn]="compra.navegadorUtilizado" pEditableColumnField="navegadorUtilizado" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.navegadorUtilizado" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
@@ -179,7 +179,7 @@
           <ng-template #output>{{ compra.navegadorUtilizado || '—' }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.paypal" pEditableColumnField="paypal" class="celda-paypal">
+      <td [pEditableColumn]="compra.paypal" pEditableColumnField="paypal" class="celda-paypal" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <p-select [options]="paypalsOpciones()" optionLabel="descripcion" optionValue="descripcion"
@@ -191,7 +191,7 @@
           </ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.idMercadolibre" pEditableColumnField="idMercadolibre">
+      <td [pEditableColumn]="compra.idMercadolibre" pEditableColumnField="idMercadolibre" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.idMercadolibre" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
@@ -199,7 +199,7 @@
           <ng-template #output>{{ compra.idMercadolibre || '—' }}</ng-template>
         </p-cellEditor>
       </td>
-      <td [pEditableColumn]="compra.usuario" pEditableColumnField="usuario" class="celda-usuario">
+      <td [pEditableColumn]="compra.usuario" pEditableColumnField="usuario" class="celda-usuario" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
             <input pInputText [(ngModel)]="compra.usuario" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />

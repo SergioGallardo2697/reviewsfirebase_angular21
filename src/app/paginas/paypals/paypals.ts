@@ -16,6 +16,7 @@ import { DialogoPaypal, DatosDialogoPaypal } from './dialogo-paypal/dialogo-payp
 import { SoloLetrasDirective } from '../../core/directivas/solo-letras.directive';
 import { SoloNumerosDirective } from '../../core/directivas/solo-numeros.directive';
 import { normalizarTexto } from '../../core/utilidades/texto.util';
+import { EditarDobleClicDirective } from '../../core/directivas/editar-doble-clic.directive';
 
 const ANCHO_DIALOGO = '450px';
 const CAMPO_ORDEN_DEFECTO = 'descripcion';
@@ -34,6 +35,7 @@ const CAMPO_ORDEN_DEFECTO = 'descripcion';
     TooltipModule,
     SoloLetrasDirective,
     SoloNumerosDirective,
+    EditarDobleClicDirective
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './paypals.html',

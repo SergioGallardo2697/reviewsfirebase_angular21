@@ -43,3 +43,10 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+// MDC oculta el ícono nativo del selector de fecha; se fuerza a mostrarlo en toda la app
+.mdc-text-field__input[type='date']::-webkit-calendar-picker-indicator {
+  display: block !important;
+  opacity: 0.54;
+  cursor: pointer;
+}
