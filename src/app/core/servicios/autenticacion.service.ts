@@ -5,7 +5,8 @@ import {
   onAuthStateChanged,
   User,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  UserCredential
 } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { environment } from '../../../environments/environment';
@@ -56,7 +57,7 @@ export class AutenticacionService {
 
   async iniciarSesionConGoogle() {
     const proveedor = new GoogleAuthProvider();
-    const resultado = await signInWithPopup(auth, proveedor);
+    const resultado = await this.abrirPopupGoogle(proveedor);
 
     if (!this.usuarioEstaAutorizado(resultado.user)) {
       await signOut(auth);
@@ -64,6 +65,40 @@ export class AutenticacionService {
     }
 
     return resultado;
+  }
+
+  private abrirPopupGoogle(proveedor: GoogleAuthProvider): Promise<UserCredential> {
+    return new Promise<UserCredential>((resolver, rechazar) => {
+      let resuelto = false;
+
+      const finalizar = () => {
+        window.removeEventListener('focus', alRecuperarFoco);
+      };
+
+      const alRecuperarFoco = () => {
+        setTimeout(() => {
+          if (!resuelto) {
+            finalizar();
+            rechazar(new Error('auth/popup-closed-by-user'));
+          }
+        }, 1500);
+      };
+
+      window.addEventListener('focus', alRecuperarFoco);
+
+      signInWithPopup(auth, proveedor).then(
+        (resultado) => {
+          resuelto = true;
+          finalizar();
+          resolver(resultado);
+        },
+        (error) => {
+          resuelto = true;
+          finalizar();
+          rechazar(error);
+        }
+      );
+    });
   }
 
   cerrarSesion() {
