@@ -3,24 +3,24 @@
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Fecha Compra</mat-label>
-      <input matInput formControlName="fechaCompra" type="date" />
+      <input matInput id="fecha-compra" formControlName="fechaCompra" type="date" aria-label="Fecha Compra" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Producto</mat-label>
-      <input matInput formControlName="nombreProducto" />
+      <input matInput id="nombre-producto" formControlName="nombreProducto" aria-label="Producto" />
     </mat-form-field>
   </div>
 
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Precio</mat-label>
-      <input matInput formControlName="precio" appSoloDecimales inputmode="decimal" />
+      <input matInput id="precio" formControlName="precio" appSoloDecimales inputmode="decimal" aria-label="Precio" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>ID Mercadolibre</mat-label>
-      <input matInput formControlName="idMercadolibre" appSoloNumeros inputmode="numeric" />
+      <input matInput id="id-mercadolibre" formControlName="idMercadolibre" appSoloNumeros inputmode="numeric" aria-label="ID Mercadolibre" />
     </mat-form-field>
   </div>
 
@@ -42,12 +42,12 @@
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>WhatsApp Vendedor</mat-label>
-      <input matInput formControlName="whatsappVendedor" [readonly]="true" />
+      <input matInput id="whatsapp-vendedor" formControlName="whatsappVendedor" [readonly]="true" aria-label="WhatsApp Vendedor" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Facebook Vendedor</mat-label>
-      <input matInput formControlName="facebookVendedor" [readonly]="true" />
+      <input matInput id="facebook-vendedor" formControlName="facebookVendedor" [readonly]="true" aria-label="Facebook Vendedor" />
     </mat-form-field>
   </div>
 
@@ -89,18 +89,18 @@
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Facebook/WSP Utilizado</mat-label>
-      <input matInput formControlName="facebookWspUtilizado" />
+      <input matInput id="facebook-wsp-utilizado" formControlName="facebookWspUtilizado" aria-label="Facebook/WSP Utilizado" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Navegador Utilizado</mat-label>
-      <input matInput formControlName="navegadorUtilizado" />
+      <input matInput id="navegador-utilizado" formControlName="navegadorUtilizado" aria-label="Navegador Utilizado" />
     </mat-form-field>
   </div>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Usuario</mat-label>
-    <input matInput formControlName="usuario" />
+    <input matInput id="usuario" formControlName="usuario" aria-label="Usuario" />
   </mat-form-field>
 
   <div class="separador-opcionales">
@@ -116,7 +116,7 @@
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Fecha Entrega</mat-label>
-    <input matInput formControlName="fechaEntrega" type="date" />
+    <input matInput id="fecha-entrega" formControlName="fechaEntrega" type="date" aria-label="Fecha Entrega" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

@@ -223,7 +223,7 @@ export class Compras {
     this.filtroEntregadas.set(null);
     this.filtroImagen.set(null);
     tabla.sortField = CAMPO_ORDEN_DEFECTO;
-    tabla.sortOrder = -1;
+    tabla.sortOrder = 1;
     tabla.first = 0;
     tabla.sortSingle();
   }

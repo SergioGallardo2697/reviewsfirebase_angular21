@@ -2,17 +2,17 @@
 <mat-dialog-content [formGroup]="formulario">
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Nombre</mat-label>
-    <input matInput formControlName="nombre" appSoloLetras />
+    <input matInput id="nombre" formControlName="nombre" appSoloLetras aria-label="Nombre" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Facebook (opcional)</mat-label>
-    <input matInput formControlName="facebook" />
+    <input matInput id="facebook" formControlName="facebook" aria-label="Facebook (opcional)" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>WhatsApp (opcional)</mat-label>
-    <input matInput formControlName="whatsapp" appSoloNumeros inputmode="numeric" />
+    <input matInput id="whatsapp" formControlName="whatsapp" appSoloNumeros inputmode="numeric" aria-label="WhatsApp (opcional)" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

@@ -2,27 +2,27 @@
 <mat-dialog-content [formGroup]="formulario">
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Banco</mat-label>
-    <input matInput formControlName="banco" />
+    <input matInput id="banco" formControlName="banco" aria-label="Banco" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>CLABE</mat-label>
-    <input matInput formControlName="clabe" appSoloNumeros inputmode="numeric" />
+    <input matInput id="clabe" formControlName="clabe" appSoloNumeros inputmode="numeric" aria-label="CLABE" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Descripción (correo)</mat-label>
-    <input matInput formControlName="descripcion" type="email" />
+    <input matInput id="descripcion" formControlName="descripcion" type="email" aria-label="Descripción (correo)" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Navegador</mat-label>
-    <input matInput formControlName="navegador" />
+    <input matInput id="navegador" formControlName="navegador" aria-label="Navegador" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Propietario</mat-label>
-    <input matInput formControlName="propietario" appSoloLetras />
+    <input matInput id="propietario" formControlName="propietario" appSoloLetras aria-label="Propietario" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

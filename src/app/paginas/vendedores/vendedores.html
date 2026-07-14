@@ -6,7 +6,8 @@
   <div class="acciones-cabecera">
     <p-iconfield class="campo-busqueda">
       <p-inputicon styleClass="pi pi-search" />
-      <input pInputText [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar vendedor..." />
+      <label for="busqueda-vendedor" class="sr-only">Buscar vendedor</label>
+      <input pInputText id="busqueda-vendedor" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar vendedor..." />
     </p-iconfield>
     <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar(tabla)" />
     <p-button icon="pi pi-plus" label="Agregar" (onClick)="abrirDialogoAgregar()" />
@@ -31,7 +32,8 @@
       <td [pEditableColumn]="vendedor.nombre" pEditableColumnField="nombre" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
-            <input pInputText [(ngModel)]="vendedor.nombre" appSoloLetras (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
+            <label for="nombre-{{vendedor.id}}" class="sr-only">Nombre</label>
+            <input pInputText id="nombre-{{vendedor.id}}" [(ngModel)]="vendedor.nombre" appSoloLetras (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
           </ng-template>
           <ng-template #output>
             {{ vendedor.nombre }}
@@ -41,7 +43,8 @@
       <td [pEditableColumn]="vendedor.facebook" pEditableColumnField="facebook" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
-            <input pInputText [(ngModel)]="vendedor.facebook" (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
+            <label for="facebook-{{vendedor.id}}" class="sr-only">Facebook</label>
+            <input pInputText id="facebook-{{vendedor.id}}" [(ngModel)]="vendedor.facebook" (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
           </ng-template>
           <ng-template #output>
             {{ vendedor.facebook || '—' }}
@@ -51,7 +54,8 @@
       <td [pEditableColumn]="vendedor.whatsapp" pEditableColumnField="whatsapp" appEditarDobleClic>
         <p-cellEditor>
           <ng-template #input>
-            <input pInputText [(ngModel)]="vendedor.whatsapp" appSoloNumeros (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" inputmode="numeric" />
+            <label for="whatsapp-{{vendedor.id}}" class="sr-only">WhatsApp</label>
+            <input pInputText id="whatsapp-{{vendedor.id}}" [(ngModel)]="vendedor.whatsapp" appSoloNumeros (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" inputmode="numeric" />
           </ng-template>
           <ng-template #output>
             {{ vendedor.whatsapp || '—' }}

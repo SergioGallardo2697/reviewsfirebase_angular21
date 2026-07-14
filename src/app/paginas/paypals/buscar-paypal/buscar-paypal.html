@@ -17,7 +17,9 @@
 
     <p-iconfield pTooltip="Días sin compra con ese vendedor" [class.campo-deshabilitado]="nuncaUsados()">
       <p-inputicon styleClass="pi pi-clock" />
+      <label for="dias-busqueda" class="sr-only">Días</label>
       <input
+        id="dias-busqueda"
         pInputText
         appSoloNumeros
         inputmode="numeric"
