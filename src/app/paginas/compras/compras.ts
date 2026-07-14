@@ -162,7 +162,10 @@ export class Compras {
         normalizarTexto(c.ciudadentrega).includes(termino) ||
         normalizarTexto(c.usuario).includes(termino) ||
         normalizarTexto(c.fechaCompra).includes(termino) ||
-        normalizarTexto(c.paypal).includes(termino)
+        normalizarTexto(c.paypal).includes(termino) ||
+        normalizarTexto(c.facebookWspUtilizado).includes(termino) ||
+        normalizarTexto(c.navegadorUtilizado).includes(termino) ||
+        normalizarTexto(c.idMercadolibre).includes(termino)
       );
     }
 

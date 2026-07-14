@@ -1,3 +1,7 @@
+// PrimeIcons - las reglas @use deben ir después de @forward/@use, por lo que
+// las importaciones CSS externas se colocan primero
+@use 'primeicons/primeicons.css';
+
 // Angular Material debe ir primero con @use (regla de SCSS moderno)
 // Include theming for Angular Material with `mat.theme()`.
 // This Sass mixin will define CSS variables that are used for styling Angular Material
@@ -5,11 +9,6 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-
-// Bootstrap - solo grid responsivo (archivo autocontenido)
-
-// PrimeIcons
-@import 'primeicons/primeicons.css';
 
 html {
   height: 100%;
@@ -43,6 +42,19 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+// Oculta visualmente un elemento manteniéndolo accesible para lectores de pantalla
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 // MDC oculta el ícono nativo del selector de fecha; se fuerza a mostrarlo en toda la app
 .mdc-text-field__input[type='date']::-webkit-calendar-picker-indicator {
