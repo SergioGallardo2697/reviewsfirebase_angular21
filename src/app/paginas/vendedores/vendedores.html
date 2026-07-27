@@ -7,7 +7,7 @@
     <p-iconfield class="campo-busqueda">
       <p-inputicon styleClass="pi pi-search" />
       <label for="busqueda-vendedor" class="sr-only">Buscar vendedor</label>
-      <input pInputText id="busqueda-vendedor" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar vendedor..." />
+      <input pInputText id="busqueda-vendedor" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar vendedor..." autocomplete="off" />
     </p-iconfield>
     <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar(tabla)" />
     <p-button icon="pi pi-plus" label="Agregar" (onClick)="abrirDialogoAgregar()" />
@@ -33,7 +33,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="nombre-{{vendedor.id}}" class="sr-only">Nombre</label>
-            <input pInputText id="nombre-{{vendedor.id}}" [(ngModel)]="vendedor.nombre" appSoloLetras (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
+            <input pInputText id="nombre-{{vendedor.id}}" [(ngModel)]="vendedor.nombre" appSoloLetras (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ vendedor.nombre }}
@@ -44,7 +44,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="facebook-{{vendedor.id}}" class="sr-only">Facebook</label>
-            <input pInputText id="facebook-{{vendedor.id}}" [(ngModel)]="vendedor.facebook" (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" />
+            <input pInputText id="facebook-{{vendedor.id}}" [(ngModel)]="vendedor.facebook" (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ vendedor.facebook || '—' }}
@@ -55,7 +55,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="whatsapp-{{vendedor.id}}" class="sr-only">WhatsApp</label>
-            <input pInputText id="whatsapp-{{vendedor.id}}" [(ngModel)]="vendedor.whatsapp" appSoloNumeros (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" inputmode="numeric" />
+            <input pInputText id="whatsapp-{{vendedor.id}}" [(ngModel)]="vendedor.whatsapp" appSoloNumeros (blur)="guardarCampo(vendedor)" (keydown.enter)="guardarCampo(vendedor)" class="campo-editable" inputmode="numeric" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ vendedor.whatsapp || '—' }}

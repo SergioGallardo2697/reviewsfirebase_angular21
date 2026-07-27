@@ -3,24 +3,24 @@
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Fecha Compra</mat-label>
-      <input matInput id="fecha-compra" formControlName="fechaCompra" type="date" aria-label="Fecha Compra" />
+      <input matInput id="fecha-compra" formControlName="fechaCompra" type="date" aria-label="Fecha Compra" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Producto</mat-label>
-      <input matInput id="nombre-producto" formControlName="nombreProducto" aria-label="Producto" />
+      <input matInput id="nombre-producto" formControlName="nombreProducto" aria-label="Producto" autocomplete="off" />
     </mat-form-field>
   </div>
 
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Precio</mat-label>
-      <input matInput id="precio" formControlName="precio" appSoloDecimales inputmode="decimal" aria-label="Precio" />
+      <input matInput id="precio" formControlName="precio" appSoloDecimales inputmode="decimal" aria-label="Precio" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>ID Mercadolibre</mat-label>
-      <input matInput id="id-mercadolibre" formControlName="idMercadolibre" appSoloNumeros inputmode="numeric" aria-label="ID Mercadolibre" />
+      <input matInput id="id-mercadolibre" formControlName="idMercadolibre" appSoloNumeros inputmode="numeric" aria-label="ID Mercadolibre" autocomplete="off" />
     </mat-form-field>
   </div>
 
@@ -42,12 +42,12 @@
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>WhatsApp Vendedor</mat-label>
-      <input matInput id="whatsapp-vendedor" formControlName="whatsappVendedor" [readonly]="true" aria-label="WhatsApp Vendedor" />
+      <input matInput id="whatsapp-vendedor" formControlName="whatsappVendedor" [readonly]="true" aria-label="WhatsApp Vendedor" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Facebook Vendedor</mat-label>
-      <input matInput id="facebook-vendedor" formControlName="facebookVendedor" [readonly]="true" aria-label="Facebook Vendedor" />
+      <input matInput id="facebook-vendedor" formControlName="facebookVendedor" [readonly]="true" aria-label="Facebook Vendedor" autocomplete="off" />
     </mat-form-field>
   </div>
 
@@ -89,18 +89,18 @@
   <div class="fila-campos">
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Facebook/WSP Utilizado</mat-label>
-      <input matInput id="facebook-wsp-utilizado" formControlName="facebookWspUtilizado" aria-label="Facebook/WSP Utilizado" />
+      <input matInput id="facebook-wsp-utilizado" formControlName="facebookWspUtilizado" aria-label="Facebook/WSP Utilizado" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="campo-mitad">
       <mat-label>Navegador Utilizado</mat-label>
-      <input matInput id="navegador-utilizado" formControlName="navegadorUtilizado" aria-label="Navegador Utilizado" />
+      <input matInput id="navegador-utilizado" formControlName="navegadorUtilizado" aria-label="Navegador Utilizado" autocomplete="off" />
     </mat-form-field>
   </div>
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Usuario</mat-label>
-    <input matInput id="usuario" formControlName="usuario" aria-label="Usuario" />
+    <input matInput id="usuario" formControlName="usuario" aria-label="Usuario" autocomplete="off" />
   </mat-form-field>
 
   <div class="separador-opcionales">
@@ -116,7 +116,7 @@
 
   <mat-form-field appearance="outline" class="campo-completo">
     <mat-label>Fecha Entrega</mat-label>
-    <input matInput id="fecha-entrega" formControlName="fechaEntrega" type="date" aria-label="Fecha Entrega" />
+    <input matInput id="fecha-entrega" formControlName="fechaEntrega" type="date" aria-label="Fecha Entrega" autocomplete="off" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

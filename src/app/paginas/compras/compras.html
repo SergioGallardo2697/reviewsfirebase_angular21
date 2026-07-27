@@ -16,25 +16,25 @@
       <div class="rango-fechas">
         <label for="fecha-inicio" class="sr-only">Fecha de inicio</label>
         <input pInputText type="date" id="fecha-inicio" [ngModel]="fechaInicio()" (ngModelChange)="fechaInicio.set($event)"
-          pTooltip="Fecha de inicio" class="campo-fecha" />
+          pTooltip="Fecha de inicio" class="campo-fecha" autocomplete="off" />
         <span class="separador-rango">a</span>
         <label for="fecha-fin" class="sr-only">Fecha de fin</label>
         <input pInputText type="date" id="fecha-fin" [ngModel]="fechaFin()" (ngModelChange)="fechaFin.set($event)"
-          pTooltip="Fecha de fin" class="campo-fecha" />
+          pTooltip="Fecha de fin" class="campo-fecha" autocomplete="off" />
         <p-button icon="pi pi-search" label="Buscar" (onClick)="buscarPorRango()" />
       </div>
     }
     <p-iconfield class="campo-busqueda">
       <p-inputicon styleClass="pi pi-search" />
       <label for="busqueda-general" class="sr-only">Buscar compra</label>
-      <input pInputText id="busqueda-general" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar compra..." />
+      <input pInputText id="busqueda-general" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar compra..." autocomplete="off" />
     </p-iconfield>
     <p-iconfield class="campo-busqueda campo-busqueda-precio">
       <p-inputicon styleClass="pi pi-dollar" />
       <label for="busqueda-precio" class="sr-only">Buscar por precio</label>
       <input pInputText id="busqueda-precio" appSoloDecimales inputmode="decimal"
         [ngModel]="busquedaPrecio()" (ngModelChange)="busquedaPrecio.set($event)"
-        placeholder="Precio exacto..." />
+        placeholder="Precio exacto..." autocomplete="off" />
     </p-iconfield>
     <p-button icon="pi pi-filter" [severity]="filtrosActivos() ? 'primary' : 'secondary'" [text]="true"
       pTooltip="Filtros avanzados" (onClick)="panelFiltros.toggle($event)" [badge]="filtrosActivos() ? '!' : ''" />
@@ -114,7 +114,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="fecha-{{compra.id}}" class="sr-only">Fecha de compra</label>
-            <input pInputText id="fecha-{{compra.id}}" [(ngModel)]="compra.fechaCompra" type="date" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+            <input pInputText id="fecha-{{compra.id}}" [(ngModel)]="compra.fechaCompra" type="date" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>{{ compra.fechaCompra }}</ng-template>
         </p-cellEditor>
@@ -123,7 +123,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="producto-{{compra.id}}" class="sr-only">Nombre del producto</label>
-            <input pInputText id="producto-{{compra.id}}" [(ngModel)]="compra.nombreProducto" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+            <input pInputText id="producto-{{compra.id}}" [(ngModel)]="compra.nombreProducto" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>{{ compra.nombreProducto }}</ng-template>
         </p-cellEditor>
@@ -132,7 +132,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="precio-{{compra.id}}" class="sr-only">Precio</label>
-            <input pInputText id="precio-{{compra.id}}" [(ngModel)]="compra.precio" appSoloDecimales (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" inputmode="decimal" />
+            <input pInputText id="precio-{{compra.id}}" [(ngModel)]="compra.precio" appSoloDecimales (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" inputmode="decimal" autocomplete="off" />
           </ng-template>
           <ng-template #output>{{ compra.precio | number:'1.2-2' }}</ng-template>
         </p-cellEditor>
@@ -174,7 +174,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="facebook-wsp-{{compra.id}}" class="sr-only">Facebook/WSP utilizado</label>
-            <input pInputText id="facebook-wsp-{{compra.id}}" [(ngModel)]="compra.facebookWspUtilizado" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+            <input pInputText id="facebook-wsp-{{compra.id}}" [(ngModel)]="compra.facebookWspUtilizado" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>{{ compra.facebookWspUtilizado || '—' }}</ng-template>
         </p-cellEditor>
@@ -183,7 +183,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="navegador-{{compra.id}}" class="sr-only">Navegador utilizado</label>
-            <input pInputText id="navegador-{{compra.id}}" [(ngModel)]="compra.navegadorUtilizado" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+            <input pInputText id="navegador-{{compra.id}}" [(ngModel)]="compra.navegadorUtilizado" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>{{ compra.navegadorUtilizado || '—' }}</ng-template>
         </p-cellEditor>
@@ -204,7 +204,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="id-ml-{{compra.id}}" class="sr-only">ID Mercadolibre</label>
-            <input pInputText id="id-ml-{{compra.id}}" [(ngModel)]="compra.idMercadolibre" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+            <input pInputText id="id-ml-{{compra.id}}" [(ngModel)]="compra.idMercadolibre" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>{{ compra.idMercadolibre || '—' }}</ng-template>
         </p-cellEditor>
@@ -213,7 +213,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="usuario-{{compra.id}}" class="sr-only">Usuario</label>
-            <input pInputText id="usuario-{{compra.id}}" [(ngModel)]="compra.usuario" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" />
+            <input pInputText id="usuario-{{compra.id}}" [(ngModel)]="compra.usuario" (blur)="guardarCampo(compra)" (keydown.enter)="guardarCampo(compra)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             <span class="texto-truncado texto-truncado--usuario" [pTooltip]="compra.usuario" tooltipPosition="top">{{ compra.usuario || '—' }}</span>

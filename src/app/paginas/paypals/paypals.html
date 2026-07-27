@@ -7,7 +7,7 @@
     <p-iconfield class="campo-busqueda">
       <p-inputicon styleClass="pi pi-search" />
       <label for="busqueda-paypal" class="sr-only">Buscar paypal</label>
-      <input pInputText id="busqueda-paypal" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar paypal..." />
+      <input pInputText id="busqueda-paypal" [ngModel]="busqueda()" (ngModelChange)="busqueda.set($event)" placeholder="Buscar paypal..." autocomplete="off" />
     </p-iconfield>
     <p-button icon="pi pi-filter-slash" severity="secondary" [text]="true" pTooltip="Limpiar filtros" (onClick)="limpiar(tabla)" />
     <p-button icon="pi pi-plus" label="Agregar" (onClick)="abrirDialogoAgregar()" />
@@ -35,7 +35,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="banco-{{paypal.id}}" class="sr-only">Banco</label>
-            <input pInputText id="banco-{{paypal.id}}" [(ngModel)]="paypal.banco" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
+            <input pInputText id="banco-{{paypal.id}}" [(ngModel)]="paypal.banco" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ paypal.banco }}
@@ -46,7 +46,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="clabe-{{paypal.id}}" class="sr-only">CLABE</label>
-            <input pInputText id="clabe-{{paypal.id}}" [(ngModel)]="paypal.clabe" appSoloNumeros (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" inputmode="numeric" />
+            <input pInputText id="clabe-{{paypal.id}}" [(ngModel)]="paypal.clabe" appSoloNumeros (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" inputmode="numeric" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ paypal.clabe }}
@@ -57,7 +57,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="descripcion-{{paypal.id}}" class="sr-only">Descripción</label>
-            <input pInputText id="descripcion-{{paypal.id}}" [(ngModel)]="paypal.descripcion" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" type="email" />
+            <input pInputText id="descripcion-{{paypal.id}}" [(ngModel)]="paypal.descripcion" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" type="email" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ paypal.descripcion }}
@@ -68,7 +68,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="navegador-{{paypal.id}}" class="sr-only">Navegador</label>
-            <input pInputText id="navegador-{{paypal.id}}" [(ngModel)]="paypal.navegador" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
+            <input pInputText id="navegador-{{paypal.id}}" [(ngModel)]="paypal.navegador" (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ paypal.navegador }}
@@ -79,7 +79,7 @@
         <p-cellEditor>
           <ng-template #input>
             <label for="propietario-{{paypal.id}}" class="sr-only">Propietario</label>
-            <input pInputText id="propietario-{{paypal.id}}" [(ngModel)]="paypal.propietario" appSoloLetras (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" />
+            <input pInputText id="propietario-{{paypal.id}}" [(ngModel)]="paypal.propietario" appSoloLetras (blur)="guardarCampo(paypal)" (keydown.enter)="guardarCampo(paypal)" class="campo-editable" autocomplete="off" />
           </ng-template>
           <ng-template #output>
             {{ paypal.propietario }}
